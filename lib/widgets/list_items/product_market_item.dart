@@ -17,21 +17,23 @@ class _ProductMarketItemState extends State<ProductMarketItem>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 170,
       padding: const EdgeInsets.all(10),
       decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image
           Container(
-            height: 150,
-            width: 150,
-            decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
+
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
             child: Image.network(widget.product.imageUrl,
               errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no_image.png',),
             ),
           ),
+
           Text(widget.product.name, style: MainTypography.defaultTextStyle),
           Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
           InkWell(

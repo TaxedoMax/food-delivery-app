@@ -52,7 +52,7 @@ class _SideListItem extends State<SideGroupListItem>{
                                 }
                             ),
                           ),
-
+                          const SizedBox(width: 4,),
                           // Name of group
                           Expanded(
                             child: Text(widget.group.name,
