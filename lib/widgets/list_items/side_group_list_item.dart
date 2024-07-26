@@ -2,7 +2,6 @@ import 'package:antons_app/bloc/fragment_bloc.dart';
 import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/themes/main_theme/main_decorations.dart';
 import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +23,6 @@ class _SideListItem extends State<SideGroupListItem>{
     return Column(
       children: [
         Container(
-            height: isOpened ? widget.group.subGroups.length * 35 + 70 : 60,
             padding: const EdgeInsets.all(4),
             decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
             child: Column(
@@ -67,20 +65,19 @@ class _SideListItem extends State<SideGroupListItem>{
                 // Sublist
                 Visibility(
                   visible: isOpened,
-                  child: Expanded(
-                      child: ListView.separated(
-                        itemCount: widget.group.subGroups.length,
-                        padding: const EdgeInsets.all(8),
-                        separatorBuilder: (BuildContext context, int index) => const Divider(),
-                        itemBuilder: (BuildContext context, int index) => InkWell(
-                          onTap: (){
-                            return BlocProvider.of<FragmentBloc>(context).add(GroupClickedEvent(subGroup: widget.group.subGroups[index]));
-                          },
-                          child: Text(
-                              widget.group.subGroups[index],
-                              style: MainTypography.hintTextStyle),
-                        ),
-                      )
+                  child: ListView.separated(
+                    itemCount: widget.group.subGroups.length,
+                    padding: const EdgeInsets.all(8),
+                    shrinkWrap: true,
+                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    itemBuilder: (BuildContext context, int index) => InkWell(
+                      onTap: (){
+                        return BlocProvider.of<FragmentBloc>(context).add(GroupClickedEvent(subGroup: widget.group.subGroups[index]));
+                      },
+                      child: Text(
+                          widget.group.subGroups[index],
+                          style: MainTypography.hintTextStyle),
+                    ),
                   ),),
               ],
             )

@@ -11,13 +11,9 @@ class SideGroupFragment extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
-        padding: const EdgeInsets.all(10),
-        child: ListView.builder(
-          itemCount: groups.length,
-          itemBuilder: (BuildContext context, int index) => SideGroupListItem(group: groups[index]),
-        )
+    return ListView.builder(
+      itemCount: groups.length,
+      itemBuilder: (BuildContext context, int index) => SideGroupListItem(group: groups[index]),
     );
   }
 
