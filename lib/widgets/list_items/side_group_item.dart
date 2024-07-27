@@ -7,14 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/group_model.dart';
 
-class SideGroupListItem extends StatefulWidget{
+class SideGroupItem extends StatefulWidget{
   final Group group;
-  const SideGroupListItem({super.key, required this.group});
+  const SideGroupItem({super.key, required this.group});
   @override
-  State<StatefulWidget> createState() => _SideListItem();
+  State<StatefulWidget> createState() => _SideGroupItemState();
 }
 
-class _SideListItem extends State<SideGroupListItem>{
+class _SideGroupItemState extends State<SideGroupItem>{
 
   bool isOpened = false;
   Widget? list;

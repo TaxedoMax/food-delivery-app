@@ -44,7 +44,7 @@ class _MarketFragmentState extends State<MarketFragment>{
             padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: MediaQuery.of(context).size.width > 1300 ? 4 : 3,
+                  crossAxisCount: MediaQuery.of(context).size.width ~/ 350,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
                   childAspectRatio: (170 / 245)

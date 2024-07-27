@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/group_model.dart';
 
-class GroupListItem extends StatelessWidget{
+class GroupItem extends StatelessWidget{
   final Group group;
-  const GroupListItem({super.key, required this.group});
+  const GroupItem({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {

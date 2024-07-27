@@ -1,18 +1,12 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
-import 'package:antons_app/in_memory_db.dart';
+import 'package:antons_app/bloc/groups_list_bloc.dart';
 import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/themes/main_theme/main_decorations.dart';
 import 'package:antons_app/themes/main_theme/typography.dart';
 import 'package:antons_app/widgets/fragments/basket_fragment.dart';
-import 'package:antons_app/widgets/fragments/groups_fragment.dart';
-import 'package:antons_app/widgets/fragments/side_groups_fragment.dart';
-import 'package:antons_app/widgets/list_items/group_list_item.dart';
-import 'package:antons_app/widgets/list_items/side_group_list_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../models/group_model.dart';
+import '../widgets/fragments/side_groups_fragment.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -23,7 +17,7 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage>{
 
-List<Group> groups = InMemoryDB.groupsList;
+// List<Group> groups = InMemoryDB.groupsList;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +59,15 @@ List<Group> groups = InMemoryDB.groupsList;
         backgroundColor: Colors.white,
       ),
 
-      body: BlocProvider<FragmentBloc>(
-        create: (context) => FragmentBloc(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider<FragmentBloc>(
+              create: (context) => FragmentBloc()..add(GroupsListOpenedEvent())
+          ),
+          BlocProvider<GroupsListBloc>(
+              create: (context) => GroupsListBloc()..add(GroupsListUpdatedEvent())
+              )
+        ],
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -76,9 +77,10 @@ List<Group> groups = InMemoryDB.groupsList;
               Expanded(
                 flex: 15,
                 child: Container(
+                  alignment: Alignment.center,
                   decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
                   padding: const EdgeInsets.all(10),
-                  child: SideGroupFragment(groups: groups)
+                  child: const SideGroupFragment()
                 ),
               ),
 
@@ -87,14 +89,15 @@ List<Group> groups = InMemoryDB.groupsList;
               // Main space with goods
               Expanded(
                 flex: 60,
-                child: BlocBuilder<FragmentBloc, Widget>(
-                  builder: (context, state) {
-                    return Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
-                      child: state,
-                    );
-                  }
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(10),
+                  decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
+                  child: BlocBuilder<FragmentBloc, Widget>(
+                      builder: (context, state) {
+                      return state;
+                    }
+                  ),
                 ),
               ),
 
