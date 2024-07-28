@@ -1,4 +1,4 @@
-import 'package:antons_app/bloc/groups_list_bloc.dart';
+import 'package:antons_app/bloc/group_list_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +13,12 @@ class SideGroupFragment extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GroupsListBloc, GroupsListState>(
+    return BlocBuilder<GroupListBloc, GroupListState>(
       builder: (context, state) {
-        if(state is GroupsListUnknownState){
+        if(state is GroupListUnknownState){
           return const CircularProgressIndicator();
         }
-        else if (state is GroupsListKnownState){
+        else if (state is GroupListKnownState){
           return ListView.builder(
             itemCount: state.groups.length,
             itemBuilder: (BuildContext context, int index) => SideGroupItem(group: state.groups[index]),

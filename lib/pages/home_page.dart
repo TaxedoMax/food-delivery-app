@@ -1,11 +1,12 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
-import 'package:antons_app/bloc/groups_list_bloc.dart';
+import 'package:antons_app/bloc/group_list_bloc.dart';
 import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/themes/main_theme/main_decorations.dart';
 import 'package:antons_app/themes/main_theme/typography.dart';
 import 'package:antons_app/widgets/fragments/basket_fragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/product_list_bloc.dart';
 import '../widgets/fragments/side_groups_fragment.dart';
 
 class HomePage extends StatefulWidget{
@@ -16,9 +17,6 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage>{
-
-// List<Group> groups = InMemoryDB.groupsList;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +62,12 @@ class _HomePageState extends State<HomePage>{
           BlocProvider<FragmentBloc>(
               create: (context) => FragmentBloc()..add(GroupsListOpenedEvent())
           ),
-          BlocProvider<GroupsListBloc>(
-              create: (context) => GroupsListBloc()..add(GroupsListUpdatedEvent())
-              )
+          BlocProvider<GroupListBloc>(
+              create: (context) => GroupListBloc()..add(GroupListUpdatedEvent())
+              ),
+          BlocProvider<ProductListBloc>(
+            create: (context) => ProductListBloc(),
+          )
         ],
         child: Padding(
           padding: const EdgeInsets.all(20),

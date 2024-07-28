@@ -1,3 +1,4 @@
+import 'package:antons_app/bloc/product_list_bloc.dart';
 import 'package:antons_app/widgets/fragments/groups_fragment.dart';
 import 'package:antons_app/widgets/fragments/market_fragment.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class FragmentBloc extends Bloc<FragmentEvent, Widget>{
     on<GroupsListOpenedEvent>(_onGroupsListOpened);
   }
 
-  _onGroupClicked(GroupClickedEvent event, Emitter emit){
+  _onGroupClicked(GroupClickedEvent event, Emitter emit) async {
     emit(MarketFragment(group: event.subGroup));
   }
 

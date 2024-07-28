@@ -1,10 +1,12 @@
+import 'dart:core';
 
 import 'package:antons_app/models/product_model.dart';
+import 'package:flutter/cupertino.dart';
 
-import 'models/group_model.dart';
+import '../models/group_model.dart';
 
 class InMemoryDB{
-  static Future<List<Group>> groupsList () async {
+  static Future<List<Group>> getGroupList () async {
     await Future.delayed(const Duration(seconds: 1));
     return
       [
@@ -14,7 +16,17 @@ class InMemoryDB{
       ];
   }
 
-  static Map<String, List<Product>> products = {
+  static Future<List<Product>> getProductByGroupName(String groupName) async {
+    await Future.delayed(const Duration(seconds: 1));
+    if(_products.containsKey(groupName)){
+      return _products[groupName]!;
+    }
+    else {
+      return [];
+    }
+  }
+
+  static final Map<String, List<Product>> _products = {
     'Завтрак, обед и ужин': [
       Product(name: 'Овсянка', price: 100, weight: 15, imageUrl: ''),
       Product(name: 'Гречка', price: 150, weight: 20, imageUrl: 'https://besarte.ru/wp-content/uploads/2023/04/chem-polezna-grechka-dlya-organizma-cheloveka.jpg'),

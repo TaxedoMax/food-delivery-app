@@ -1,4 +1,4 @@
-import 'package:antons_app/bloc/groups_list_bloc.dart';
+import 'package:antons_app/bloc/group_list_bloc.dart';
 import 'package:antons_app/widgets/list_items/group_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +14,12 @@ class GroupsFragment extends StatefulWidget{
 class _GroupsFragmentState extends State<GroupsFragment>{
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GroupsListBloc, GroupsListState>(
+    return BlocBuilder<GroupListBloc, GroupListState>(
       builder: (context, state) {
-        if(state is GroupsListUnknownState){
+        if(state is GroupListUnknownState){
           return const CircularProgressIndicator();
         }
-        else if(state is GroupsListKnownState){
+        else if(state is GroupListKnownState){
           return Column(
             children: [
               Expanded(
