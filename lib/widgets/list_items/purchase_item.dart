@@ -1,20 +1,19 @@
 import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/themes/main_theme/main_decorations.dart';
 import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product_model.dart';
+import '../../models/purchase_model.dart';
 
-class ProductBasketItem extends StatefulWidget{
-  const ProductBasketItem({super.key, required this.product, required this.amount});
-  final Product product;
-  final int amount;
+class PurchaseItem extends StatefulWidget{
+  const PurchaseItem({super.key, required this.purchase});
+  final Purchase purchase;
   @override
-  State<StatefulWidget> createState() => _ProductBasketItemState();
+  State<StatefulWidget> createState() => _PurchaseItemState();
 }
 
-class _ProductBasketItemState extends State<ProductBasketItem>{
+class _PurchaseItemState extends State<PurchaseItem>{
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,7 +22,7 @@ class _ProductBasketItemState extends State<ProductBasketItem>{
         child: Row(
           children: [
             // Product's image
-            Image.network(widget.product.imageUrl,
+            Image.network(widget.purchase.product.imageUrl,
               width: 100,
               height: 100,
               errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no_image.png', width: 100, height: 100,)
@@ -37,8 +36,8 @@ class _ProductBasketItemState extends State<ProductBasketItem>{
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.product.name, style: MainTypography.defaultTextStyle),
-                    Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
+                    Text(widget.purchase.product.name, style: MainTypography.defaultTextStyle),
+                    Text('${widget.purchase.product.weight.toString()} г', style: MainTypography.hintTextStyle),
                     // Button +/-
                     Container(
                       width: 100,
@@ -53,7 +52,7 @@ class _ProductBasketItemState extends State<ProductBasketItem>{
 
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(widget.amount.toString(), style: MainTypography.defaultTextStyle),
+                            child: Text(widget.purchase.amount.toString(), style: MainTypography.defaultTextStyle),
                           ),
 
                           const InkWell(
@@ -67,7 +66,7 @@ class _ProductBasketItemState extends State<ProductBasketItem>{
               ),
             ),
 
-            Text('${widget.product.price * widget.amount} руб', style: MainTypography.defaultTextStyle,)
+            Text('${widget.purchase.product.price * widget.purchase.amount} руб', style: MainTypography.defaultTextStyle,)
           ],
         ),
       ),

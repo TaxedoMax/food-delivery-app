@@ -1,4 +1,4 @@
-import 'package:antons_app/repository/in_memory_db.dart';
+import 'package:antons_app/repository/main_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -11,7 +11,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState>{
 
   _onProductListOpenedEvent(ProductListOpenedEvent event, Emitter emit) async{
     emit(ProductListLoadingState(event.group));
-    var products = await InMemoryDB.getProductByGroupName(event.group);
+    var products = await MainRepository.getProductByGroupName(event.group);
     emit(ProductListUploadedState(event.group, products));
   }
 

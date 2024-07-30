@@ -2,7 +2,9 @@ import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/themes/main_theme/main_decorations.dart';
 import 'package:antons_app/themes/main_theme/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/basket_list_bloc.dart';
 import '../../models/product_model.dart';
 
 class ProductMarketItem extends StatefulWidget {
@@ -37,6 +39,7 @@ class _ProductMarketItemState extends State<ProductMarketItem>{
           Text(widget.product.name, style: MainTypography.defaultTextStyle),
           Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
           InkWell(
+            onTap: () => BlocProvider.of<BasketListBloc>(context).add(PurchaseAddedEvent(widget.product)),
             child: Container(
               decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
               alignment: Alignment.center,

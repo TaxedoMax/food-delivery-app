@@ -7,6 +7,7 @@ import 'package:antons_app/widgets/fragments/basket_fragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/product_list_bloc.dart';
+import '../bloc/basket_list_bloc.dart';
 import '../widgets/fragments/side_groups_fragment.dart';
 
 class HomePage extends StatefulWidget{
@@ -67,6 +68,9 @@ class _HomePageState extends State<HomePage>{
               ),
           BlocProvider<ProductListBloc>(
             create: (context) => ProductListBloc(),
+          ),
+          BlocProvider<BasketListBloc>(
+              create: (context) => BasketListBloc()..add(PurchaseListRequestedEvent())
           )
         ],
         child: Padding(
@@ -108,7 +112,6 @@ class _HomePageState extends State<HomePage>{
               Expanded(
                   flex: 25,
                   child: Container(
-                    height: 435,
                     padding: const EdgeInsets.all(10),
                     decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
                     child: const BasketFragment(),
