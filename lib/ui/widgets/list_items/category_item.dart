@@ -1,43 +1,43 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/main_decorations.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/group_model.dart';
+import '../../../models/category_model.dart';
+import '../../themes/main_theme/main_color_scheme.dart';
+import '../../themes/main_theme/main_decorations.dart';
+import '../../themes/main_theme/typography.dart';
 
-class GroupItem extends StatelessWidget{
-  final Group group;
-  const GroupItem({super.key, required this.group});
+
+class CategoryItem extends StatelessWidget{
+  final Category category;
+  const CategoryItem({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-            group.name,
+            category.name,
             style: MainTypography.headingTextStyle
         ),
       SizedBox(
         height: 200,
         child: ListView.builder(
-          itemCount: group.subGroups.length,
+          itemCount: category.subCategories.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (BuildContext context, int index){
             return Row(
               children: [
                 const SizedBox(width: 10),
                 InkWell(
-                  onTap: () => BlocProvider.of<FragmentBloc>(context).add(GroupClickedEvent(subGroup: group.subGroups[index])),
+                  onTap: () => BlocProvider.of<FragmentBloc>(context).add(CategoryClickedEvent(subCategory: category.subCategories[index])),
                   child: Container(
                     decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
                     padding: const EdgeInsets.all(10),
                     child: Column(
                     children: [
                         Text(
-                            group.subGroups[index],
+                            category.subCategories[index],
                             style: MainTypography.defaultTextStyle
                         ),
                         Container(

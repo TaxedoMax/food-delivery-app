@@ -1,14 +1,15 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
-import 'package:antons_app/bloc/group_list_bloc.dart';
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/main_decorations.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:antons_app/widgets/fragments/basket_fragment.dart';
+import 'package:antons_app/bloc/category_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/product_list_bloc.dart';
-import '../bloc/basket_list_bloc.dart';
-import '../widgets/fragments/side_groups_fragment.dart';
+
+import '../../bloc/cart_bloc.dart';
+import '../../bloc/product_list_bloc.dart';
+import '../themes/main_theme/main_color_scheme.dart';
+import '../themes/main_theme/main_decorations.dart';
+import '../themes/main_theme/typography.dart';
+import '../widgets/fragments/cart_fragment.dart';
+import '../widgets/fragments/side_categories_fragment.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -61,16 +62,16 @@ class _HomePageState extends State<HomePage>{
       body: MultiBlocProvider(
         providers: [
           BlocProvider<FragmentBloc>(
-              create: (context) => FragmentBloc()..add(GroupsListOpenedEvent())
+              create: (context) => FragmentBloc()..add(CategoryListOpenedEvent())
           ),
-          BlocProvider<GroupListBloc>(
-              create: (context) => GroupListBloc()..add(GroupListUpdatedEvent())
+          BlocProvider<CategoryListBloc>(
+              create: (context) => CategoryListBloc()..add(CategoryListUpdatedEvent())
               ),
           BlocProvider<ProductListBloc>(
             create: (context) => ProductListBloc(),
           ),
-          BlocProvider<BasketListBloc>(
-              create: (context) => BasketListBloc()..add(PurchaseListRequestedEvent())
+          BlocProvider<CartBloc>(
+              create: (context) => CartBloc()..add(CartRequestedEvent())
           )
         ],
         child: Padding(
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage>{
                   alignment: Alignment.center,
                   decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
                   padding: const EdgeInsets.all(10),
-                  child: const SideGroupFragment()
+                  child: const SideCategoriesFragment()
                 ),
               ),
 
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage>{
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.backgroundShadow),
-                    child: const BasketFragment(),
+                    child: const CartFragment(),
                   )
               ),
             ],

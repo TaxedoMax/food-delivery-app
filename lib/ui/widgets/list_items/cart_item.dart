@@ -1,19 +1,21 @@
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/main_decorations.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
+import 'package:antons_app/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/product_model.dart';
-import '../../models/purchase_model.dart';
+import '../../../models/purchase_model.dart';
+import '../../themes/main_theme/main_color_scheme.dart';
+import '../../themes/main_theme/main_decorations.dart';
+import '../../themes/main_theme/typography.dart';
 
-class PurchaseItem extends StatefulWidget{
-  const PurchaseItem({super.key, required this.purchase});
+
+class CartItem extends StatefulWidget{
+  const CartItem({super.key, required this.purchase});
   final Purchase purchase;
   @override
-  State<StatefulWidget> createState() => _PurchaseItemState();
+  State<StatefulWidget> createState() => _CartItemState();
 }
 
-class _PurchaseItemState extends State<PurchaseItem>{
+class _CartItemState extends State<CartItem>{
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,8 +48,9 @@ class _PurchaseItemState extends State<PurchaseItem>{
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const InkWell(
-                            child: Icon(Icons.remove, color: MainColorScheme.mainText)
+                          InkWell(
+                            onTap: () => BlocProvider.of<CartBloc>(context).add(PurchaseRemovedEvent(widget.purchase.product)),
+                            child: const Icon(Icons.remove, color: MainColorScheme.mainText)
                           ),
 
                           Padding(
@@ -55,8 +58,9 @@ class _PurchaseItemState extends State<PurchaseItem>{
                             child: Text(widget.purchase.amount.toString(), style: MainTypography.defaultTextStyle),
                           ),
 
-                          const InkWell(
-                              child: Icon(Icons.add, color: MainColorScheme.mainText)
+                          InkWell(
+                              onTap: () => BlocProvider.of<CartBloc>(context).add(PurchaseAddedEvent(widget.purchase.product)),
+                              child: const Icon(Icons.add, color: MainColorScheme.mainText)
                           ),
                         ],
                       ),

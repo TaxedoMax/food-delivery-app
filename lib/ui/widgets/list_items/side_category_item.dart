@@ -1,20 +1,21 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/main_decorations.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/group_model.dart';
+import '../../../models/category_model.dart';
+import '../../themes/main_theme/main_color_scheme.dart';
+import '../../themes/main_theme/main_decorations.dart';
+import '../../themes/main_theme/typography.dart';
 
-class SideGroupItem extends StatefulWidget{
-  final Group group;
-  const SideGroupItem({super.key, required this.group});
+
+class SideCategoryItem extends StatefulWidget{
+  final Category category;
+  const SideCategoryItem({super.key, required this.category});
   @override
-  State<StatefulWidget> createState() => _SideGroupItemState();
+  State<StatefulWidget> createState() => _SideCategoryItemState();
 }
 
-class _SideGroupItemState extends State<SideGroupItem>{
+class _SideCategoryItemState extends State<SideCategoryItem>{
 
   bool isOpened = false;
   Widget? list;
@@ -37,13 +38,13 @@ class _SideGroupItemState extends State<SideGroupItem>{
                       height: 50,
                       child: Row(
                         children: [
-                          // Image of group
+                          // Image of category
                           Container(
                             height: 30,
                             width: 30,
                             decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
                             child: Image.network(
-                                widget.group.imageUrl,
+                                widget.category.imageUrl,
                                 errorBuilder: (context, error, stackTrace){
                                   debugPrint('Error, while printing image: ${error.toString()}');
                                   return const Icon(Icons.error_outline);
@@ -51,9 +52,9 @@ class _SideGroupItemState extends State<SideGroupItem>{
                             ),
                           ),
                           const SizedBox(width: 4,),
-                          // Name of group
+                          // Name of category
                           Expanded(
-                            child: Text(widget.group.name,
+                            child: Text(widget.category.name,
                               style: MainTypography.defaultTextStyle,
                             )
                           )
@@ -66,16 +67,16 @@ class _SideGroupItemState extends State<SideGroupItem>{
                 Visibility(
                   visible: isOpened,
                   child: ListView.separated(
-                    itemCount: widget.group.subGroups.length,
+                    itemCount: widget.category.subCategories.length,
                     padding: const EdgeInsets.all(8),
                     shrinkWrap: true,
                     separatorBuilder: (BuildContext context, int index) => const Divider(),
                     itemBuilder: (BuildContext context, int index) => InkWell(
                       onTap: (){
-                        return BlocProvider.of<FragmentBloc>(context).add(GroupClickedEvent(subGroup: widget.group.subGroups[index]));
+                        return BlocProvider.of<FragmentBloc>(context).add(CategoryClickedEvent(subCategory: widget.category.subCategories[index]));
                       },
                       child: Text(
-                          widget.group.subGroups[index],
+                          widget.category.subCategories[index],
                           style: MainTypography.hintTextStyle),
                     ),
                   ),),

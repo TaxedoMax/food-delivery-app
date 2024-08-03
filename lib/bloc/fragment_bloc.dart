@@ -1,29 +1,30 @@
 import 'package:antons_app/bloc/product_list_bloc.dart';
-import 'package:antons_app/widgets/fragments/groups_fragment.dart';
-import 'package:antons_app/widgets/fragments/market_fragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../ui/widgets/fragments/categories_fragment.dart';
+import '../ui/widgets/fragments/market_fragment.dart';
+
 class FragmentBloc extends Bloc<FragmentEvent, Widget>{
-  FragmentBloc(): super(const GroupsFragment()){
-    on<GroupClickedEvent>(_onGroupClicked);
-    on<GroupsListOpenedEvent>(_onGroupsListOpened);
+  FragmentBloc(): super(const CategoriesFragment()){
+    on<CategoryClickedEvent>(_onCategoryClicked);
+    on<CategoryListOpenedEvent>(_onCategoryListOpened);
   }
 
-  _onGroupClicked(GroupClickedEvent event, Emitter emit) async {
-    emit(MarketFragment(group: event.subGroup));
+  _onCategoryClicked(CategoryClickedEvent event, Emitter emit) async {
+    emit(MarketFragment(category: event.subCategory));
   }
 
-  _onGroupsListOpened(GroupsListOpenedEvent event, Emitter emit) async {
-    emit(const GroupsFragment());
+  _onCategoryListOpened(CategoryListOpenedEvent event, Emitter emit) async {
+    emit(const CategoriesFragment());
   }
 }
 
 abstract class FragmentEvent{}
-class GroupClickedEvent extends FragmentEvent{
-  final String subGroup;
-  GroupClickedEvent({required this.subGroup});
+class CategoryClickedEvent extends FragmentEvent{
+  final String subCategory;
+  CategoryClickedEvent({required this.subCategory});
 }
-class GroupsListOpenedEvent extends FragmentEvent{}
+class CategoryListOpenedEvent extends FragmentEvent{}
 
 // abstract class FragmentState{}

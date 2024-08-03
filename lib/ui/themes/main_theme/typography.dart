@@ -1,7 +1,7 @@
 import 'dart:ui';
-
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
 import 'package:flutter/material.dart';
+
+import 'main_color_scheme.dart';
 
 class MainTypography{
   static const TextStyle headingTextStyle = TextStyle(

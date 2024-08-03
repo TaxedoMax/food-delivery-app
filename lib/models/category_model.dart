@@ -1,10 +1,10 @@
-class Group{
+class Category{
   final String name;
   final String imageUrl;
-  final List<String> subGroups;
+  final List<String> subCategories;
 
-  Group({
+  Category({
     required this.name,
     required this.imageUrl,
-    required this.subGroups});
+    required this.subCategories});
 }

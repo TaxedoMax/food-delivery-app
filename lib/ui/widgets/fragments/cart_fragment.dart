@@ -1,25 +1,24 @@
-import 'package:antons_app/bloc/basket_list_bloc.dart';
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/main_decorations.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:antons_app/widgets/list_items/purchase_item.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:antons_app/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/product_model.dart';
+import '../../themes/main_theme/main_color_scheme.dart';
+import '../../themes/main_theme/main_decorations.dart';
+import '../../themes/main_theme/typography.dart';
+import '../list_items/cart_item.dart';
 
-class BasketFragment extends StatefulWidget{
-  const BasketFragment({super.key});
+
+class CartFragment extends StatefulWidget{
+  const CartFragment({super.key});
 
   @override
-  State<StatefulWidget> createState() => _BasketFragment();
+  State<StatefulWidget> createState() => _CartFragmentState();
 }
 
-class _BasketFragment extends State<BasketFragment>{
+class _CartFragmentState extends State<CartFragment>{
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BasketListBloc, PurchaseListState>(
+    return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         return Column(
           children: [
@@ -27,9 +26,9 @@ class _BasketFragment extends State<BasketFragment>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if(state is PurchaseListLoadingState)
+                    if(state is CartLoadingState)
                       const CircularProgressIndicator(),
-                    if(state is PurchaseListUploadedState && state.purchases.isEmpty)
+                    if(state is CartUploadedState && state.purchases.isEmpty)
                       Container(
                         height: 350,
                         width: 350,
@@ -40,11 +39,11 @@ class _BasketFragment extends State<BasketFragment>{
                           ),
                         ),
                       ),
-                    if(state is PurchaseListUploadedState && state.purchases.isNotEmpty)
+                    if(state is CartUploadedState && state.purchases.isNotEmpty)
                       Expanded(
                         child: ListView.separated(
                             shrinkWrap: true,
-                            itemBuilder: (context, index) => PurchaseItem(purchase: state.purchases[index]),
+                            itemBuilder: (context, index) => CartItem(purchase: state.purchases[index]),
                             separatorBuilder: (context, index) => const Divider(),
                             itemCount: state.purchases.length),
                       ),

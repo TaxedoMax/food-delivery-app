@@ -1,14 +1,15 @@
 import 'package:antons_app/bloc/fragment_bloc.dart';
 import 'package:antons_app/bloc/product_list_bloc.dart';
-import 'package:antons_app/themes/main_theme/main_color_scheme.dart';
-import 'package:antons_app/themes/main_theme/typography.dart';
-import 'package:antons_app/widgets/list_items/product_market_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../themes/main_theme/main_color_scheme.dart';
+import '../../themes/main_theme/typography.dart';
+import '../list_items/product_market_item.dart';
+
 class MarketFragment extends StatefulWidget{
-  final String group;
-  const MarketFragment({super.key, required this.group});
+  final String category;
+  const MarketFragment({super.key, required this.category});
 
   @override
   State<StatefulWidget> createState() => _MarketFragmentState();
@@ -19,14 +20,14 @@ class _MarketFragmentState extends State<MarketFragment>{
   @override
   void initState(){
     super.initState();
-    BlocProvider.of<ProductListBloc>(context).add(ProductListOpenedEvent(widget.group));
+    BlocProvider.of<ProductListBloc>(context).add(ProductListOpenedEvent(widget.category));
   }
   // Updating product list
   @override
   void didUpdateWidget(MarketFragment oldWidget){
     super.didUpdateWidget(oldWidget);
-    if(widget.group != oldWidget.group){
-      BlocProvider.of<ProductListBloc>(context).add(ProductListOpenedEvent(widget.group));
+    if(widget.category != oldWidget.category){
+      BlocProvider.of<ProductListBloc>(context).add(ProductListOpenedEvent(widget.category));
     }
   }
 
@@ -38,11 +39,11 @@ class _MarketFragmentState extends State<MarketFragment>{
         Row(
           children: [
             IconButton(
-                onPressed: () => BlocProvider.of<FragmentBloc>(context).add(GroupsListOpenedEvent()),
+                onPressed: () => BlocProvider.of<FragmentBloc>(context).add(CategoryListOpenedEvent()),
                 icon: const Icon(Icons.arrow_back, color: MainColorScheme.mainText),
             ),
             Text(
-                widget.group,
+                widget.category,
                 style: MainTypography.headingTextStyle
             ),
           ],
