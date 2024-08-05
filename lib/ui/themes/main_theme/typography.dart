@@ -31,4 +31,9 @@ class MainTypography{
     fontWeight: FontWeight.bold,
     color: MainColorScheme.backgroundShadow,
   );
+
+  static const TextStyle errorTextStyle = TextStyle(
+    fontSize: 15,
+    color: MainColorScheme.errorColor,
+  );
 }

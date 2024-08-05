@@ -9,4 +9,5 @@ class MainColorScheme{
   static const Color mainShadow = Color.fromARGB(255, 255, 133, 159);
   static const Color hintText = Color.fromARGB(255, 90, 90, 90);
   static const Color mainText = Colors.black;
+  static const Color errorColor = Colors.red;
 }

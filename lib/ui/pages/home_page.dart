@@ -2,6 +2,7 @@ import 'package:antons_app/bloc/fragment_bloc.dart';
 import 'package:antons_app/bloc/category_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../bloc/cart_bloc.dart';
 import '../../bloc/product_list_bloc.dart';
@@ -22,14 +23,18 @@ class _HomePageState extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 242, 242, 242),
+      backgroundColor: MainColorScheme.background,
       appBar: AppBar(
-
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(25),
+              bottomLeft: Radius.circular(25)),
+        ),
         title: const Text(
           'S-рынок',
           style: MainTypography.headingTextStyle,
         ),
-
         actions: [
         Container(
           width: 500,
@@ -48,15 +53,9 @@ class _HomePageState extends State<HomePage>{
           ),
         ),
           IconButton(
-              onPressed: (){},
+              onPressed: () => context.go('/login'),
               icon: const Icon(Icons.account_circle))
         ],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25)),
-        ),
-        backgroundColor: Colors.white,
       ),
 
       body: MultiBlocProvider(
