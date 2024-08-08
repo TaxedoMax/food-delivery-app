@@ -2,7 +2,7 @@ import 'package:antons_app/bloc/fragment_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/category_model.dart';
+import '../../../entities/category.dart';
 import '../../themes/main_theme/main_color_scheme.dart';
 import '../../themes/main_theme/main_decorations.dart';
 import '../../themes/main_theme/typography.dart';
@@ -37,7 +37,7 @@ class CategoryItem extends StatelessWidget{
                     child: Column(
                     children: [
                         Text(
-                            category.subCategories[index],
+                            category.subCategories[index].name,
                             style: MainTypography.defaultTextStyle
                         ),
                         Container(

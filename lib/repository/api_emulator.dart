@@ -1,48 +1,71 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pair/pair.dart';
 
-import '../models/category_model.dart';
-import '../models/product_model.dart';
-import '../models/purchase_model.dart';
+import '../entities/category.dart';
+import '../entities/product.dart';
 
 class APIEmulator{
   static final List<Category> _categoryList =
   [
-    Category(name: 'Готовая еда', imageUrl: 'https://cm.samokat.ru/processed/l/product_card/01099c85-859a-481f-a53b-01e728fa7706.jpg', subCategories: ['Завтрак, обед и ужин', 'Перекус', 'Всё горячее', 'Десерты и выпечка', 'Горячий кофе']),
-    Category(name: 'Mолоко, яйца и сыр', imageUrl: 'https://static21.tgcnt.ru/posts/_0/e1/e1b6cfc149cd7de1a38ca63ef1ab2d43.jpg', subCategories: ['Молочное и яйца', 'Йогурты и десерты', 'Cыр']),
-    Category(name: 'Овощи, грибы и фрукты', imageUrl: 'https://static21.tgcnt.ru/posts/_0/e1/e1b6cfc149cd7de1a38ca63ef1ab2d43.jpg', subCategories: ['Овощи', 'Грибы', 'Фрукты', 'Зелень']),
+    Category(id: '1', name: 'Готовая еда', imageUrl: 'https://cm.samokat.ru/processed/l/product_card/01099c85-859a-481f-a53b-01e728fa7706.jpg',
+        subCategories:
+          [
+            Category(id: '11', name: 'Завтрак, обед и ужин', imageUrl: '', subCategories: []),
+            Category(id: '12', name: 'Перекус', imageUrl: '', subCategories: []),
+            Category(id: '13', name: 'Всё горячее', imageUrl: '', subCategories: []),
+            Category(id: '14', name: 'Десерты и выпечка', imageUrl: '', subCategories: []),
+            Category(id: '15', name: 'Горячий кофе', imageUrl: '', subCategories: []),
+          ]
+    ),
+    Category(id: '2', name: 'Mолоко, яйца и сыр', imageUrl: 'https://static21.tgcnt.ru/posts/_0/e1/e1b6cfc149cd7de1a38ca63ef1ab2d43.jpg',
+        subCategories:
+          [
+            Category(id: '21', name: 'Молочное и яйца', imageUrl: '', subCategories: []),
+            Category(id: '22', name: 'Йогурты и десерты', imageUrl: '', subCategories: []),
+            Category(id: '23', name: 'Cыр', imageUrl: '', subCategories: []),
+          ]
+    ),
+    Category(id: '3', name: 'Овощи, грибы и фрукты', imageUrl: 'https://static21.tgcnt.ru/posts/_0/e1/e1b6cfc149cd7de1a38ca63ef1ab2d43.jpg',
+        subCategories:
+          [
+            Category(id: '31', name: 'Овощи', imageUrl: '', subCategories: []),
+            Category(id: '32', name: 'Грибы', imageUrl: '', subCategories: []),
+            Category(id: '33', name: 'Фрукты', imageUrl: '', subCategories: []),
+            Category(id: '34', name: 'Зелень', imageUrl: '', subCategories: []),
+          ]
+    ),
   ];
 
   static Future<List<Category>> getCategories() async {
     await Future.delayed(const Duration(seconds: 1));
     List<Category> newList = [];
     for(var category in _categoryList){
-      newList.add(Category(name: category.name, imageUrl: category.imageUrl, subCategories: category.subCategories));
+      newList.add(Category(id: category.id, name: category.name, imageUrl: category.imageUrl, subCategories: category.subCategories));
     }
     return newList;
   }
 
   static final Map<String, List<Product>> _products = {
-    'Завтрак, обед и ужин': [
-      Product(name: 'Овсянка', price: 100, weight: 15, imageUrl: ''),
-      Product(name: 'Гречка', price: 150, weight: 20, imageUrl: 'https://besarte.ru/wp-content/uploads/2023/04/chem-polezna-grechka-dlya-organizma-cheloveka.jpg'),
-      Product(name: 'Рис', price: 190, weight: 1000, imageUrl: ''),
-      Product(name: 'Панкейки с вишней', price: 1000, weight: 150, imageUrl: ''),
-      Product(name: 'Йогурт', price: 2000, weight: 100, imageUrl: '')
+    '11': [
+      Product('index1', 'Рыба', 10, 100, 0, 'Очень вкусная рыба. Пальчики оближешь!', 'Имбулечка', null, null, null, null, null, null, null, null, null),
+      Product.named(id: 'spb', name: 'Санкт-Петербург', quantity: 1, price: 52, discount: 0, description: 'Тем больше нравится Москва', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: null),
+      Product.named(id: 'msk', name: 'Москва', quantity: 1, price: 100, discount: 0, description: 'Но в Питере семья', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: null),
+      Product.named(id: 'grechka', name: 'Гречка', quantity: 30, price: 100, discount: 0, description: 'Но в Питере семья', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: 'https://besarte.ru/wp-content/uploads/2023/04/chem-polezna-grechka-dlya-organizma-cheloveka.jpg'),
+      Product.named(id: 'vatrushka', name: 'Ватрушка', quantity: 30, price: 100, discount: 0, description: 'Но в Питере семья', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: null),
     ],
-    'Молочное и яйца' : [
-      Product(name: 'Молочное', price: 100, weight: 15, imageUrl: 'https://cm.samokat.ru/processed/l/product_card/01099c85-859a-481f-a53b-01e728fa7706.jpg'),
-      Product(name: 'Яйца', price: 100, weight: 15, imageUrl: '')
+    '21' : [
+      Product.named(id: 'vatrushka', name: 'Молочное', quantity: 3, price: 100, discount: 0, description: 'Но в Питере семья', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: null),
+      Product.named(id: 'spb', name: 'Санкт-Петербург', quantity: 1, price: 52, discount: 0, description: 'Тем больше нравится Москва', shortDescription: 'Пиьясят два', weight: 52, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: null)
     ]
   };
 
-  static Future<List<Product>> getProducts(String categoryName) async {
+  static Future<List<Product>> getProductsByCategoryId(String categoryId) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    if(_products.containsKey(categoryName)){
+    if(_products.containsKey(categoryId)){
       List<Product> newList = [];
-      for(var product in _products[categoryName]!){
-        newList.add(Product(name: product.name, price: product.price, weight: product.weight, imageUrl: product.imageUrl));
+      for(var product in _products[categoryId]!){
+        newList.add(Product.clone(product));
       }
       return newList;
     }
@@ -51,42 +74,40 @@ class APIEmulator{
     }
   }
 
-  static final List<Purchase> _cart =
+  static final List<Product> _cart =
   [
-    Purchase(2, Product(name: "Рис", price: 100, weight: 20, imageUrl: '')),
-    Purchase(3, Product(name: "Cыр", price: 10, weight: 30, imageUrl: '')),
-    Purchase(1, Product(name: "Масло", price: 10000, weight: 1000, imageUrl: ''))
+    Product('index1', 'Рыба', 2, 100, 0, 'Очень вкусная рыба. Пальчики оближешь!', 'Имбулечка', null, null, null, null, null, null, null, null, null),
   ];
 
-  static Future<List<Purchase>> getPurchases() async{
+  static Future<List<Product>> getCart() async{
     await Future.delayed(const Duration(seconds: 1));
-    List<Purchase> newList = [];
-    for(var purchase in _cart){
-      newList.add(Purchase(purchase.amount, purchase.product));
+    List<Product> newList = [];
+    for(var product in _cart){
+      newList.add(Product.clone(product));
     }
     return newList;
   }
 
-  static Future<void> addPurchase(Product product) async {
+  static Future<void> addProduct(Product product) async {
     await Future.delayed(const Duration(seconds: 1));
-    for(var purchase in _cart){
-      if(purchase.product.name == product.name){
+    for(var cartProduct in _cart){
+      if(cartProduct.id == product.id){
         debugPrint("amount increased");
-        purchase.amount++;
+        cartProduct.quantity++;
         return;
       }
     }
     debugPrint("new added");
-    _cart.add(Purchase(1, product));
+    _cart.add(Product.clone(product));
   }
 
-  static Future<void> removePurchase(Product product) async {
+  static Future<void> removeProduct(Product product) async {
     await Future.delayed(const Duration(seconds: 1));
-    for(var purchase in _cart){
-      if(purchase.product.name == product.name){
-        purchase.amount--;
-        if(purchase.amount < 1){
-          _cart.remove(purchase);
+    for(var cartProduct in _cart){
+      if(cartProduct.id == product.id){
+        cartProduct.quantity--;
+        if(cartProduct.quantity < 1){
+          _cart.remove(cartProduct);
         }
         return;
       }
@@ -108,7 +129,7 @@ class APIEmulator{
     return 'OK';
   }
 
-  static Future<String> login(String login, String password) async{
+  static Future<String> signIn(String login, String password) async{
     await Future.delayed(const Duration(seconds: 1));
     var credentials = Pair(login, password);
 

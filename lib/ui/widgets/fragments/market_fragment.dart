@@ -3,12 +3,13 @@ import 'package:antons_app/bloc/product_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../entities/category.dart';
 import '../../themes/main_theme/main_color_scheme.dart';
 import '../../themes/main_theme/typography.dart';
 import '../list_items/product_market_item.dart';
 
 class MarketFragment extends StatefulWidget{
-  final String category;
+  final Category category;
   const MarketFragment({super.key, required this.category});
 
   @override
@@ -43,7 +44,7 @@ class _MarketFragmentState extends State<MarketFragment>{
                 icon: const Icon(Icons.arrow_back, color: MainColorScheme.mainText),
             ),
             Text(
-                widget.category,
+                widget.category.name,
                 style: MainTypography.headingTextStyle
             ),
           ],

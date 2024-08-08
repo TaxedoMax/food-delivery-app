@@ -167,7 +167,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                             // Кнопка "Войти"
                             TextButton(
-                              onPressed: () => context.go('/login'),
+                              onPressed: (){
+                                context.go('/login');
+                              },
                               child: const Text('Войти'),
                             ),
                           ],

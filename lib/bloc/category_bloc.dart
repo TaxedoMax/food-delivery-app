@@ -1,5 +1,5 @@
 import 'package:antons_app/use_case/cart_use_case.dart';
-import 'package:antons_app/models/category_model.dart';
+import 'package:antons_app/entities/category.dart';
 import 'package:antons_app/use_case/category_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';

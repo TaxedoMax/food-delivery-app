@@ -1,4 +1,5 @@
 import 'package:antons_app/bloc/product_list_bloc.dart';
+import 'package:antons_app/entities/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +23,7 @@ class FragmentBloc extends Bloc<FragmentEvent, Widget>{
 
 abstract class FragmentEvent{}
 class CategoryClickedEvent extends FragmentEvent{
-  final String subCategory;
+  final Category subCategory;
   CategoryClickedEvent({required this.subCategory});
 }
 class CategoryListOpenedEvent extends FragmentEvent{}

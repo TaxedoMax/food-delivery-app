@@ -5,7 +5,7 @@ import 'package:antons_app/ui/pages/registration_page.dart';
 import 'package:antons_app/use_case/auth_use_case.dart';
 import 'package:antons_app/use_case/cart_use_case.dart';
 import 'package:antons_app/use_case/category_use_case.dart';
-import 'package:antons_app/use_case/product_lict_use_case.dart';
+import 'package:antons_app/use_case/product_list_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -27,13 +27,6 @@ final GoRouter _router = GoRouter(
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     GoRoute(path: '/register', builder: (context, state) => const RegistrationPage())
   ],
-  redirect: (context, GoRouterState state){
-    if(BlocProvider.of<AuthBloc>(context).state is UnauthorizedState && state.fullPath != '/login' && state.fullPath != '/register'){
-      debugPrint(state.fullPath);
-      return '/login';
-    }
-    return null;
-  }
 );
 
 class MyApp extends StatelessWidget {
@@ -42,7 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc(),
+      create: (context) => AuthBloc()..add(AppStartedEvent()),
         child: MaterialApp.router(
           title: 'АнтоноМаксоКат',
           theme: ThemeData(

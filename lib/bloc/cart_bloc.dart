@@ -3,8 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
-import '../models/product_model.dart';
-import '../models/purchase_model.dart';
+import '../entities/product.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState>{
 
@@ -14,11 +13,12 @@ class CartBloc extends Bloc<CartEvent, CartState>{
     on<CartRequestedEvent>(_onPurchaseListRequestedEvent);
     on<PurchaseAddedEvent>(_onPurchaseAddedEvent);
     on<PurchaseRemovedEvent>(_onPurchaseRemovedEvent);
+    on<CartOrderedEvent>(_onCartOrderedEvent);
   }
 
   _onPurchaseListRequestedEvent(CartRequestedEvent event, Emitter emit) async {
     emit(CartLoadingState());
-    var purchases = await cartUseCase.getPurchases();
+    var purchases = await cartUseCase.getCart();
     emit(CartUploadedState(purchases));
   }
 
@@ -26,13 +26,13 @@ class CartBloc extends Bloc<CartEvent, CartState>{
     cartUseCase.cartUpdateRequestStarted();
     // Adding to cart in cache
     debugPrint("1");
-    cartUseCase.addPurchaseToCache(event.product);
+    cartUseCase.addProductToCache(event.product);
     // Building information
     debugPrint("2");
     emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
     // Adding product to api cart
     debugPrint("3");
-    await cartUseCase.addPurchase(event.product);
+    await cartUseCase.addProduct(event.product);
 
     cartUseCase.cartUpdateRequestFinished();
 
@@ -51,9 +51,9 @@ class CartBloc extends Bloc<CartEvent, CartState>{
 
   _onPurchaseRemovedEvent(PurchaseRemovedEvent event, Emitter emit) async {
     cartUseCase.cartUpdateRequestStarted();
-    cartUseCase.removePurchaseFromCache(event.product);
+    cartUseCase.removeProductFromCache(event.product);
     emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
-    await cartUseCase.removePurchase(event.product);
+    await cartUseCase.removeProduct(event.product);
     cartUseCase.cartUpdateRequestFinished();
 
     if(cartUseCase.canUpdateCartCache()){
@@ -65,6 +65,16 @@ class CartBloc extends Bloc<CartEvent, CartState>{
         emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
       }
     }
+  }
+
+  _onCartOrderedEvent(CartOrderedEvent event, Emitter emit) async{
+    emit(CartLoadingState());
+    bool status = await cartUseCase.order();
+    if(status){
+      cartUseCase.clearCache();
+    }
+    List<Product> cart = await cartUseCase.getCart();
+    emit(CartUploadedState(cart));
   }
 }
 
@@ -78,10 +88,11 @@ class PurchaseRemovedEvent extends CartEvent{
   final Product product;
   PurchaseRemovedEvent(this.product);
 }
+class CartOrderedEvent extends CartEvent{}
 
 abstract class CartState{}
 class CartLoadingState extends CartState{}
 class CartUploadedState extends CartState{
-  final List<Purchase> purchases;
+  final List<Product> purchases;
   CartUploadedState(this.purchases);
 }

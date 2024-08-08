@@ -2,7 +2,7 @@ import 'package:antons_app/bloc/fragment_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/category_model.dart';
+import '../../../entities/category.dart';
 import '../../themes/main_theme/main_color_scheme.dart';
 import '../../themes/main_theme/main_decorations.dart';
 import '../../themes/main_theme/typography.dart';
@@ -76,7 +76,7 @@ class _SideCategoryItemState extends State<SideCategoryItem>{
                         return BlocProvider.of<FragmentBloc>(context).add(CategoryClickedEvent(subCategory: widget.category.subCategories[index]));
                       },
                       child: Text(
-                          widget.category.subCategories[index],
+                          widget.category.subCategories[index].name,
                           style: MainTypography.hintTextStyle),
                     ),
                   ),),

@@ -1,3 +1,4 @@
+import 'package:antons_app/bloc/auth_bloc.dart';
 import 'package:antons_app/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +44,7 @@ class _CartFragmentState extends State<CartFragment>{
                       Expanded(
                         child: ListView.separated(
                             shrinkWrap: true,
-                            itemBuilder: (context, index) => CartItem(purchase: state.purchases[index]),
+                            itemBuilder: (context, index) => CartItem(product: state.purchases[index]),
                             separatorBuilder: (context, index) => const Divider(),
                             itemCount: state.purchases.length),
                       ),
@@ -51,17 +52,25 @@ class _CartFragmentState extends State<CartFragment>{
                 )
             ),
 
-            InkWell(
-              onTap: (){},
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
-                child: const Text(
-                  'Заказать',
-                  style: MainTypography.buttonTextStyle,
-                ),
-              ),
+            BlocBuilder<AuthBloc, AuthBlocState>(
+              builder: (context, authState) {
+                return InkWell(
+                  onTap: (){
+                    if(authState is SuccessfulAuthState) {
+                      BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
+                    }
+                  },
+                  child: Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
+                    child: const Text(
+                      'Заказать',
+                      style: MainTypography.buttonTextStyle,
+                    ),
+                  ),
+                );
+              }
             )
           ]
         );
