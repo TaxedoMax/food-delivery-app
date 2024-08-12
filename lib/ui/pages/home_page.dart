@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../bloc/cart_bloc.dart';
 import '../../bloc/product_list_bloc.dart';
 import '../themes/main_theme/main_color_scheme.dart';
 import '../themes/main_theme/main_decorations.dart';
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage>{
           ),
         ),
           IconButton(
-              onPressed: () => context.go('/login'),
+              onPressed: () => context.push('/login'),
               icon: const Icon(Icons.account_circle))
         ],
       ),
@@ -69,9 +68,6 @@ class _HomePageState extends State<HomePage>{
           BlocProvider<ProductListBloc>(
             create: (context) => ProductListBloc(),
           ),
-          BlocProvider<CartBloc>(
-              create: (context) => CartBloc()..add(CartRequestedEvent())
-          )
         ],
         child: Padding(
           padding: const EdgeInsets.all(20),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:antons_app/bloc/auth_bloc.dart';
 import 'package:antons_app/use_case/cart_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,87 +9,106 @@ import 'package:get_it/get_it.dart';
 import '../entities/product.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState>{
+  AuthBlocState? authBlocState;
+  late StreamSubscription<AuthBlocState> streamSubscription;
 
-  var cartUseCase = GetIt.instance<CartUseCase>();
+  final _cartUseCase = GetIt.instance<CartUseCase>();
 
-  CartBloc(): super(CartLoadingState()){
-    on<CartRequestedEvent>(_onPurchaseListRequestedEvent);
-    on<PurchaseAddedEvent>(_onPurchaseAddedEvent);
-    on<PurchaseRemovedEvent>(_onPurchaseRemovedEvent);
+  CartBloc(Stream<AuthBlocState> stream): super(CartLoadingState()){
+    // Subscribe to auth state
+    streamSubscription = stream.listen(_onAuthStateChanged);
+
+    on<CartUpdateRequestedEvent>(_onCartUpdateRequestedEvent);
+    on<ProductAddedEvent>(_onProductAddedEvent);
+    on<ProductRemovedEvent>(_onProductRemovedEvent);
     on<CartOrderedEvent>(_onCartOrderedEvent);
   }
 
-  _onPurchaseListRequestedEvent(CartRequestedEvent event, Emitter emit) async {
-    emit(CartLoadingState());
-    var purchases = await cartUseCase.getCart();
-    emit(CartUploadedState(purchases));
+  @override
+  close() async {
+    streamSubscription.cancel();
+    super.close();
   }
 
-  _onPurchaseAddedEvent(PurchaseAddedEvent event, Emitter emit) async {
-    cartUseCase.cartUpdateRequestStarted();
-    // Adding to cart in cache
+  _onAuthStateChanged(AuthBlocState authBlocState){
+    this.authBlocState = authBlocState;
+    if(authBlocState is! LoadingAuthState){
+      add(CartUpdateRequestedEvent());
+    }
+  }
+
+  _onCartUpdateRequestedEvent(CartUpdateRequestedEvent event, Emitter emit) async {
+    emit(CartLoadingState());
+    var cart = await _cartUseCase.getCart();
+    debugPrint('Cart updated');
+    emit(CartUploadedState(cart));
+  }
+
+  _onProductAddedEvent(ProductAddedEvent event, Emitter emit) async {
+    _cartUseCase.cartUpdateRequestStarted();
+    // Adding to cached cart
     debugPrint("1");
-    cartUseCase.addProductToCache(event.product);
+    _cartUseCase.addProductToCache(event.product);
     // Building information
     debugPrint("2");
-    emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
+    emit(CartUploadedState(_cartUseCase.getCartFromCache()));
     // Adding product to api cart
     debugPrint("3");
-    await cartUseCase.addProduct(event.product);
+    await _cartUseCase.addProduct(event.product);
 
-    cartUseCase.cartUpdateRequestFinished();
+    _cartUseCase.cartUpdateRequestFinished();
 
     debugPrint("4");
     // Checking if everything is ok, only when all requests finished
-    if(cartUseCase.canUpdateCartCache()){
+    if(_cartUseCase.canUpdateCartCache()){
       debugPrint("Started checking");
-      bool status = await cartUseCase.updateCartCache();
+      bool status = await _cartUseCase.updateCartCache();
       debugPrint("Finished checking");
       if(!status){
         debugPrint("5");
-        emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
+        emit(CartUploadedState(_cartUseCase.getCartFromCache()));
       }
     }
   }
 
-  _onPurchaseRemovedEvent(PurchaseRemovedEvent event, Emitter emit) async {
-    cartUseCase.cartUpdateRequestStarted();
-    cartUseCase.removeProductFromCache(event.product);
-    emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
-    await cartUseCase.removeProduct(event.product);
-    cartUseCase.cartUpdateRequestFinished();
+  _onProductRemovedEvent(ProductRemovedEvent event, Emitter emit) async {
+    _cartUseCase.cartUpdateRequestStarted();
+    _cartUseCase.removeProductFromCache(event.product);
+    emit(CartUploadedState(_cartUseCase.getCartFromCache()));
+    await _cartUseCase.removeProduct(event.product);
+    _cartUseCase.cartUpdateRequestFinished();
 
-    if(cartUseCase.canUpdateCartCache()){
+    if(_cartUseCase.canUpdateCartCache()){
       debugPrint("Started checking");
-      bool status = await cartUseCase.updateCartCache();
+      bool status = await _cartUseCase.updateCartCache();
       debugPrint("Finished checking");
       if(!status){
         debugPrint("5");
-        emit(CartUploadedState(cartUseCase.getPurchaseFromCache()));
+        emit(CartUploadedState(_cartUseCase.getCartFromCache()));
       }
     }
   }
 
   _onCartOrderedEvent(CartOrderedEvent event, Emitter emit) async{
     emit(CartLoadingState());
-    bool status = await cartUseCase.order();
+    bool status = await _cartUseCase.order();
     if(status){
-      cartUseCase.clearCache();
+      _cartUseCase.clearCache();
     }
-    List<Product> cart = await cartUseCase.getCart();
+    List<Product> cart = await _cartUseCase.getCart();
     emit(CartUploadedState(cart));
   }
 }
 
 abstract class CartEvent{}
-class CartRequestedEvent extends CartEvent{}
-class PurchaseAddedEvent extends CartEvent{
+class CartUpdateRequestedEvent extends CartEvent{}
+class ProductAddedEvent extends CartEvent{
   final Product product;
-  PurchaseAddedEvent(this.product);
+  ProductAddedEvent(this.product);
 }
-class PurchaseRemovedEvent extends CartEvent{
+class ProductRemovedEvent extends CartEvent{
   final Product product;
-  PurchaseRemovedEvent(this.product);
+  ProductRemovedEvent(this.product);
 }
 class CartOrderedEvent extends CartEvent{}
 
@@ -96,3 +118,5 @@ class CartUploadedState extends CartState{
   final List<Product> purchases;
   CartUploadedState(this.purchases);
 }
+class CartEmptyState extends CartState{}
+class CartUnknownState extends CartState{}

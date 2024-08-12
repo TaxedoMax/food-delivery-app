@@ -44,7 +44,18 @@ class CategoryItem extends StatelessWidget{
                           height: 150,
                           width: 150,
                           padding: const EdgeInsets.all(5),
-                          child: const ColoredBox(color: MainColorScheme.main),
+                          child: Image.network(
+                              category.subCategories[index].imageUrl,
+                              height: 150,
+                              width: 150,
+                              errorBuilder:
+                                (context, error, stackTrace) =>
+                                    Image.asset(
+                                      'assets/images/no_image.png',
+                                      height: 150,
+                                      width: 150
+                                    )
+                          )
                         )
                       ],
                     ),

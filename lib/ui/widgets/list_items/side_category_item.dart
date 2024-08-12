@@ -46,8 +46,7 @@ class _SideCategoryItemState extends State<SideCategoryItem>{
                             child: Image.network(
                                 widget.category.imageUrl,
                                 errorBuilder: (context, error, stackTrace){
-                                  debugPrint('Error, while printing image: ${error.toString()}');
-                                  return const Icon(Icons.error_outline);
+                                  return Image.asset('assets/images/no_image.png');
                                 }
                             ),
                           ),

@@ -49,7 +49,7 @@ class _CartItemState extends State<CartItem>{
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           InkWell(
-                            onTap: () => BlocProvider.of<CartBloc>(context).add(PurchaseRemovedEvent(widget.product)),
+                            onTap: () => BlocProvider.of<CartBloc>(context).add(ProductRemovedEvent(widget.product)),
                             child: const Icon(Icons.remove, color: MainColorScheme.mainText)
                           ),
 
@@ -59,7 +59,7 @@ class _CartItemState extends State<CartItem>{
                           ),
 
                           InkWell(
-                              onTap: () => BlocProvider.of<CartBloc>(context).add(PurchaseAddedEvent(widget.product)),
+                              onTap: () => BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product)),
                               child: const Icon(Icons.add, color: MainColorScheme.mainText)
                           ),
                         ],

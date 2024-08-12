@@ -1,4 +1,16 @@
 import 'package:antons_app/bloc/auth_bloc.dart';
+import 'package:antons_app/repository/api_impl/cart_repository_api.dart';
+import 'package:antons_app/repository/api_impl/category_repository_api.dart';
+import 'package:antons_app/repository/api_impl/products_repository_api.dart';
+import 'package:antons_app/repository/api_impl/user_repository_api.dart';
+import 'package:antons_app/repository/cart_repository.dart';
+import 'package:antons_app/repository/category_repository.dart';
+import 'package:antons_app/repository/in_memory_impl/cart_repository_mock.dart';
+import 'package:antons_app/repository/in_memory_impl/category_repository_mock.dart';
+import 'package:antons_app/repository/in_memory_impl/products_repository_mock.dart';
+import 'package:antons_app/repository/in_memory_impl/user_repository_mock.dart';
+import 'package:antons_app/repository/products_repository.dart';
+import 'package:antons_app/repository/user_repository.dart';
 import 'package:antons_app/ui/pages/home_page.dart';
 import 'package:antons_app/ui/pages/login_page.dart';
 import 'package:antons_app/ui/pages/registration_page.dart';
@@ -11,13 +23,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import 'bloc/cart_bloc.dart';
+
 void main() {
+  // I am going to change service locator (getIt)
+  // to dependency injection in future
+  getItInit(true);
+  runApp(const MyApp());
+}
+
+// This bool only while testing, for fast swapping between mocked repositories and real
+void getItInit(bool isTest){
   GetIt getIt = GetIt.instance;
+
+  getIt.registerSingleton<CartRepository>(isTest ? CartRepositoryMock() : CartRepositoryApi());
+  getIt.registerSingleton<CategoryRepository>(isTest ? CategoryRepositoryMock() : CategoryRepositoryApi());
+  getIt.registerSingleton<ProductsRepository>(isTest ? ProductsRepositoryMock() : ProductsRepositoryApi());
+  getIt.registerSingleton<UserRepository>(isTest ? UserRepositoryMock() : UserRepositoryApi());
+
   getIt.registerSingleton(CartUseCase());
   getIt.registerSingleton(CategoryUseCase());
   getIt.registerSingleton(ProductListUseCase());
   getIt.registerSingleton(AuthUseCase());
-  runApp(const MyApp());
 }
 
 final GoRouter _router = GoRouter(
@@ -34,8 +61,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc()..add(AppStartedEvent()),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc()..add(AppStartedEvent())
+          ),
+          BlocProvider<CartBloc>(
+              create: (context) => CartBloc(BlocProvider.of<AuthBloc>(context).stream)..add(CartUpdateRequestedEvent())
+          )
+        ],
         child: MaterialApp.router(
           title: 'АнтоноМаксоКат',
           theme: ThemeData(

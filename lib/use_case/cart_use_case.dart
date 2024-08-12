@@ -1,12 +1,20 @@
 import 'dart:core';
-
 import 'package:antons_app/entities/product.dart';
-import 'package:antons_app/repository/api_emulator.dart';
 import 'package:antons_app/repository/cart_repository.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 
 class CartUseCase{
-  CartRepository _cartRepository = CartRepository();
+  final CartRepository _cartRepository = GetIt.I.get<CartRepository>();
   List<Product>? _cartCache;
+
+  Product? _getProductFromCacheById(String id){
+    if(_cartCache == null) return null;
+    for(var product in _cartCache!){
+      if(product.id == id) return product;
+    }
+    return null;
+  }
 
   // This var, and all methods with it is necessary to understand,
   // when we can check if cart in cache and actual cart are same,
@@ -29,11 +37,11 @@ class CartUseCase{
 
 
   Future<List<Product>> getCart() async{
-    _cartCache ??= await _cartRepository.getCart();
+    _cartCache = await _cartRepository.getCart();
     return _cartCache!;
   }
 
-  List<Product> getPurchaseFromCache(){
+  List<Product> getCartFromCache(){
     return _cartCache ?? [];
   }
 
@@ -98,6 +106,7 @@ class CartUseCase{
 
     // Actually we update cache only when all requests are sent
     if(canUpdateCartCache()){
+      debugPrint('real 5');
       _cartCache = cart;
     }
 

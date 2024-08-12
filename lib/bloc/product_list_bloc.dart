@@ -17,7 +17,7 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState>{
 
   _onProductListOpenedEvent(ProductListOpenedEvent event, Emitter emit) async{
     emit(ProductListLoadingState(event.category));
-    var products = await productListUseCase.getProductByCategoryId(event.category.id);
+    var products = await productListUseCase.getProductsByCategoryId(event.category.id);
     emit(ProductListUploadedState(event.category, products));
   }
 

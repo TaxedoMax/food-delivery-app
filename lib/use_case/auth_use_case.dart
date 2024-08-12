@@ -1,14 +1,14 @@
-import 'package:antons_app/repository/api_emulator.dart';
+import 'package:antons_app/repository/api_impl/user_repository_api.dart';
 import 'package:antons_app/repository/user_repository.dart';
 import 'package:get_it/get_it.dart';
 
 class AuthUseCase{
   bool _isAuthorized = false;
 
-  var userRepository = UserRepository();
+  final UserRepository _userRepository = GetIt.I.get<UserRepository>();
 
   Future<String> signIn(String email, String password) async {
-    String status = await userRepository.signIn(email, password);
+    String status = await _userRepository.signIn(email, password);
     if(status == 'OK') {
       _isAuthorized = true;
     }
@@ -19,7 +19,7 @@ class AuthUseCase{
   }
 
   Future<String> register(String login, String email, String password) async{
-    String status = await userRepository.register(login, email, password);
+    String status = await _userRepository.register(login, email, password);
     if(status == 'OK') {
       _isAuthorized = true;
     }

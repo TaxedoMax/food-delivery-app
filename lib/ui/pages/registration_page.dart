@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../bloc/auth_bloc.dart';
 import '../themes/main_theme/typography.dart';
-import 'login_page.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -77,7 +76,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   children: [
                                     const SizedBox(height: 16,),
                                     if(state is LoadingAuthState) const CircularProgressIndicator(),
-                                    if(state is ErrorAuthState) Text(state.errorDescription, style: MainTypography.errorTextStyle)
+                                    if(state is ErrorAuthState) Text(state.errorDescription, style: MainTypography.errorTextStyle),
+                                    if(state is SuccessfulAuthState) const Text('Вы уже вошли в аккаунт')
                                   ],
                                 )
                             ),
@@ -168,7 +168,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             // Кнопка "Войти"
                             TextButton(
                               onPressed: (){
-                                context.go('/login');
+                                context.push('/login');
                               },
                               child: const Text('Войти'),
                             ),

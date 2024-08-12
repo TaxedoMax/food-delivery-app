@@ -44,7 +44,7 @@ class _ProductMarketItemState extends State<ProductMarketItem>{
               return InkWell(
                 onTap: (){
                   if(authState is SuccessfulAuthState){
-                    BlocProvider.of<CartBloc>(context).add(PurchaseAddedEvent(widget.product));
+                    BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product));
                   }
                 },
                 child: Container(

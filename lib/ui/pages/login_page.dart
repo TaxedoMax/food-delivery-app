@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthBloc, AuthBlocState>(
       listener: (context, state){
         if(state is SuccessfulAuthState){
-          context.go('/market');
+          context.push('/market');
         }
       },
       child: Scaffold(
@@ -73,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   const SizedBox(height: 16,),
                                   if(state is LoadingAuthState) const CircularProgressIndicator(),
-                                  if(state is ErrorAuthState) Text(state.errorDescription, style: MainTypography.errorTextStyle)
+                                  if(state is ErrorAuthState) Text(state.errorDescription, style: MainTypography.errorTextStyle),
+                                  if(state is SuccessfulAuthState) const Text('Вы уже вошли в аккаунт')
                                 ],
                               )
                             ),
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                             TextButton(
                               onPressed: (){
                                 if(state is! LoadingAuthState){
-                                  context.go('/register');
+                                  context.push('/register');
                                 }
                               },
                               child: const Text('Регистрация'),

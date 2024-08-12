@@ -1,6 +1,7 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class ApiRepository{
   static final dio = Dio();
@@ -19,6 +20,8 @@ abstract class ApiRepository{
     dio.options.baseUrl = 'http://localhost:5124';
     // dio.options.connectTimeout = const Duration(seconds: 5);
     // dio.options.receiveTimeout = const Duration(seconds: 5);
-    dio.interceptors.add(CookieManager(_persistCookieJar));
+    if(!kIsWeb){
+      dio.interceptors.add(CookieManager(_persistCookieJar));
+    }
   }
 }
