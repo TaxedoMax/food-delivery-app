@@ -61,15 +61,19 @@ class _MarketFragmentState extends State<MarketFragment>{
                   return const CircularProgressIndicator();
                 }
                 else if(state is ProductListUploadedState){
-                  return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: MediaQuery.of(context).size.width ~/ 350,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
-                          childAspectRatio: (170 / 245)
-                      ),
-                      itemCount: state.products.length,
-                      itemBuilder: (BuildContext context, int index) => ProductMarketItem(product: state.products[index])
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: constraints.maxWidth ~/ 200,
+                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 20,
+                              childAspectRatio: (170 / 245)
+                          ),
+                          itemCount: state.products.length,
+                          itemBuilder: (BuildContext context, int index) => ProductMarketItem(product: state.products[index])
+                      );
+                    }
                   );
                 }
 

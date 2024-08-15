@@ -42,11 +42,7 @@ class _ProductMarketItemState extends State<ProductMarketItem>{
           BlocBuilder<AuthBloc, AuthBlocState>(
             builder: (context, authState) {
               return InkWell(
-                onTap: (){
-                  if(authState is SuccessfulAuthState){
-                    BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product));
-                  }
-                },
+                onTap: ()=> BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product)),
                 child: Container(
                   decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
                   alignment: Alignment.center,

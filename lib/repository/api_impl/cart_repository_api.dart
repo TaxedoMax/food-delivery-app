@@ -5,6 +5,8 @@ import 'package:antons_app/repository/cart_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../exception/unauthorized_exception.dart';
+
 class CartRepositoryApi extends ApiRepository implements CartRepository{
   @override
   Future<List<Product>> getCart() async {
@@ -21,7 +23,11 @@ class CartRepositoryApi extends ApiRepository implements CartRepository{
       return resultList;
     }
 
-    throw Exception(response.statusCode.toString());
+    if(response.statusCode == 401){
+      throw UnauthorizedException();
+    }
+
+    throw Exception("unknown");
     // TODO: not 200 code
   }
 
@@ -30,7 +36,9 @@ class CartRepositoryApi extends ApiRepository implements CartRepository{
     Response response = await ApiRepository.dio.put('/shopcart/add/${product.id}');
     if(response.statusCode != 200){
       // TODO: continue
-      throw Exception(response.statusCode);
+      if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
     }
   }
 
@@ -39,7 +47,9 @@ class CartRepositoryApi extends ApiRepository implements CartRepository{
     Response response = await ApiRepository.dio.put('/shopcart/remove/${product.id}');
     if(response.statusCode != 200){
       // TODO: continue
-      throw Exception(response.statusCode);
+      if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
     }
   }
 
@@ -52,6 +62,9 @@ class CartRepositoryApi extends ApiRepository implements CartRepository{
       }
       else{
         // TODO
+        if(response.statusCode == 401) {
+          throw UnauthorizedException();
+        }
         return false;
       }
     }

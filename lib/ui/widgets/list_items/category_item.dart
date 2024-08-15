@@ -20,16 +20,25 @@ class CategoryItem extends StatelessWidget{
             category.name,
             style: MainTypography.headingTextStyle
         ),
-      SizedBox(
-        height: 200,
-        child: ListView.builder(
-          itemCount: category.subCategories.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (BuildContext context, int index){
-            return Row(
-              children: [
-                const SizedBox(width: 10),
-                InkWell(
+      const SizedBox(
+        height: 10,
+      ),
+      LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: constraints.maxWidth ~/ 210,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  childAspectRatio: 11 / 12
+              ),
+              shrinkWrap: true,
+              itemCount: category.subCategories.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index){
+                return InkWell(
                   onTap: () => BlocProvider.of<FragmentBloc>(context).add(CategoryClickedEvent(subCategory: category.subCategories[index])),
                   child: Container(
                     decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
@@ -40,32 +49,27 @@ class CategoryItem extends StatelessWidget{
                             category.subCategories[index].name,
                             style: MainTypography.defaultTextStyle
                         ),
-                        Container(
-                          height: 150,
-                          width: 150,
-                          padding: const EdgeInsets.all(5),
-                          child: Image.network(
-                              category.subCategories[index].imageUrl,
-                              height: 150,
-                              width: 150,
-                              errorBuilder:
-                                (context, error, stackTrace) =>
-                                    Image.asset(
-                                      'assets/images/no_image.png',
-                                      height: 150,
-                                      width: 150
-                                    )
-                          )
+                        const SizedBox(height: 10,),
+                        Image.network(
+                            category.subCategories[index].imageUrl,
+                            height: 150,
+                            width: 150,
+                            errorBuilder:
+                              (context, error, stackTrace) =>
+                                  Image.asset(
+                                    'assets/images/no_image.png',
+                                    height: 150,
+                                    width: 150
+                                  )
                         )
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(width: 10)
-              ],
-            );
-          },
-        ),
+                );
+              },
+            ),
+          );
+        }
       )
       ],
     );

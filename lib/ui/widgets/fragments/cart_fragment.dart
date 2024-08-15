@@ -29,7 +29,7 @@ class _CartFragmentState extends State<CartFragment>{
                   children: [
                     if(state is CartLoadingState)
                       const CircularProgressIndicator(),
-                    if(state is CartUploadedState && state.purchases.isEmpty)
+                    if(state is CartUploadedState && state.cart.isEmpty)
                       Container(
                         height: 350,
                         width: 350,
@@ -40,13 +40,13 @@ class _CartFragmentState extends State<CartFragment>{
                           ),
                         ),
                       ),
-                    if(state is CartUploadedState && state.purchases.isNotEmpty)
+                    if(state is CartUploadedState && state.cart.isNotEmpty)
                       Expanded(
                         child: ListView.separated(
                             shrinkWrap: true,
-                            itemBuilder: (context, index) => CartItem(product: state.purchases[index]),
+                            itemBuilder: (context, index) => CartItem(product: state.cart[index]),
                             separatorBuilder: (context, index) => const Divider(),
-                            itemCount: state.purchases.length),
+                            itemCount: state.cart.length),
                       ),
                   ],
                 )
@@ -56,9 +56,7 @@ class _CartFragmentState extends State<CartFragment>{
               builder: (context, authState) {
                 return InkWell(
                   onTap: (){
-                    if(authState is SuccessfulAuthState) {
-                      BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
-                    }
+                    BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
                   },
                   child: Container(
                     height: 50,

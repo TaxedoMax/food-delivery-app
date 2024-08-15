@@ -24,7 +24,7 @@ class CartRepositoryMock implements CartRepository{
   @override
   Future<void> addProduct(Product product) async {
     await Future.delayed(const Duration(seconds: 1));
-    if(random.nextBool()){
+    if(random.nextInt(10) < 8){
       for(var cartProduct in _cart){
         if(cartProduct.id == product.id){
           debugPrint("amount increased");

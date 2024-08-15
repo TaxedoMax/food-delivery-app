@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:antons_app/bloc/auth_bloc.dart';
+import 'package:antons_app/exception/unauthorized_exception.dart';
 import 'package:antons_app/use_case/cart_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,66 +39,103 @@ class CartBloc extends Bloc<CartEvent, CartState>{
   }
 
   _onCartUpdateRequestedEvent(CartUpdateRequestedEvent event, Emitter emit) async {
-    emit(CartLoadingState());
-    var cart = await _cartUseCase.getCart();
-    debugPrint('Cart updated');
-    emit(CartUploadedState(cart));
+    try{
+      emit(CartLoadingState());
+      var cart = await _cartUseCase.getCart();
+      debugPrint('Cart updated');
+      emit(CartUploadedState(cart));
+    }
+    on Exception catch(e){
+      if(e is UnauthorizedException){
+        _cartUseCase.clearCache();
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+      }
+    }
   }
 
   _onProductAddedEvent(ProductAddedEvent event, Emitter emit) async {
-    _cartUseCase.cartUpdateRequestStarted();
-    // Adding to cached cart
-    debugPrint("1");
-    _cartUseCase.addProductToCache(event.product);
-    // Building information
-    debugPrint("2");
-    emit(CartUploadedState(_cartUseCase.getCartFromCache()));
-    // Adding product to api cart
-    debugPrint("3");
-    await _cartUseCase.addProduct(event.product);
+    try{
+      _cartUseCase.cartUpdateRequestStarted();
+      // Adding to cached cart
+      debugPrint("1");
+      _cartUseCase.addProductToCache(event.product);
+      // Building information
+      debugPrint("2");
+      emit(CartUploadedState(_cartUseCase.getCartFromCache()));
+      // Adding product to api cart
+      debugPrint("3");
+      await _cartUseCase.addProduct(event.product);
 
-    _cartUseCase.cartUpdateRequestFinished();
+      _cartUseCase.cartUpdateRequestFinished();
 
-    debugPrint("4");
-    // Checking if everything is ok, only when all requests finished
-    if(_cartUseCase.canUpdateCartCache()){
-      debugPrint("Started checking");
-      bool status = await _cartUseCase.updateCartCache();
-      debugPrint("Finished checking");
-      if(!status){
-        debugPrint("5");
-        emit(CartUploadedState(_cartUseCase.getCartFromCache()));
+      debugPrint("4");
+      // Checking if everything is ok, only when all requests finished
+      if(_cartUseCase.canUpdateCartCache()){
+        debugPrint("Started checking");
+        bool status = await _cartUseCase.updateCartCache();
+        debugPrint("Finished checking");
+        if(!status){
+          debugPrint("5");
+          emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 422));
+        }
+      }
+    } on Exception catch(e){
+      if(e is UnauthorizedException){
+        _cartUseCase.clearCache();
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
       }
     }
   }
 
   _onProductRemovedEvent(ProductRemovedEvent event, Emitter emit) async {
-    _cartUseCase.cartUpdateRequestStarted();
-    _cartUseCase.removeProductFromCache(event.product);
-    emit(CartUploadedState(_cartUseCase.getCartFromCache()));
-    await _cartUseCase.removeProduct(event.product);
-    _cartUseCase.cartUpdateRequestFinished();
+    try{
+      _cartUseCase.cartUpdateRequestStarted();
+      _cartUseCase.removeProductFromCache(event.product);
+      emit(CartUploadedState(_cartUseCase.getCartFromCache()));
+      await _cartUseCase.removeProduct(event.product);
+      _cartUseCase.cartUpdateRequestFinished();
 
-    if(_cartUseCase.canUpdateCartCache()){
-      debugPrint("Started checking");
-      bool status = await _cartUseCase.updateCartCache();
-      debugPrint("Finished checking");
-      if(!status){
-        debugPrint("5");
-        emit(CartUploadedState(_cartUseCase.getCartFromCache()));
+      if(_cartUseCase.canUpdateCartCache()){
+        debugPrint("Started checking");
+        bool status = await _cartUseCase.updateCartCache();
+        debugPrint("Finished checking");
+        if(!status){
+          debugPrint("5");
+          emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 422));
+        }
+      }
+    }
+    on Exception catch(e){
+      if(e is UnauthorizedException){
+        _cartUseCase.clearCache();
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
       }
     }
   }
 
   _onCartOrderedEvent(CartOrderedEvent event, Emitter emit) async{
-    emit(CartLoadingState());
-    bool status = await _cartUseCase.order();
-    if(status){
-      _cartUseCase.clearCache();
+    try{
+      emit(CartLoadingState());
+      bool status = await _cartUseCase.order();
+      if(status){
+        _cartUseCase.clearCache();
+        List<Product> cart = await _cartUseCase.getCart();
+        emit(CartUploadedState(cart));
+      }
+      else{
+        List<Product> cart = await _cartUseCase.getCart();
+        emit(CartUploadedWithErrorState(cart, 0));
+      }
     }
-    List<Product> cart = await _cartUseCase.getCart();
-    emit(CartUploadedState(cart));
+    on Exception catch(e){
+      if(e is UnauthorizedException){
+        _cartUseCase.clearCache();
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+      }
+    }
   }
+
+
 }
 
 abstract class CartEvent{}
@@ -115,8 +153,12 @@ class CartOrderedEvent extends CartEvent{}
 abstract class CartState{}
 class CartLoadingState extends CartState{}
 class CartUploadedState extends CartState{
-  final List<Product> purchases;
-  CartUploadedState(this.purchases);
+  final List<Product> cart;
+  CartUploadedState(this.cart);
+}
+class CartUploadedWithErrorState extends CartUploadedState{
+  int errorStatus;
+  CartUploadedWithErrorState(super.cart, this.errorStatus);
 }
 class CartEmptyState extends CartState{}
 class CartUnknownState extends CartState{}
