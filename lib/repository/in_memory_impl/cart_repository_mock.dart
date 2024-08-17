@@ -8,7 +8,7 @@ class CartRepositoryMock implements CartRepository{
   final Random random = Random();
   final List<Product> _cart =
   [
-    Product('index1', 'Рыба', 2, 100, 0, 'Очень вкусная рыба. Пальчики оближешь!', 'Имбулечка', null, null, null, null, null, null, null, null, null),
+    Product.named(id: 'index1', name: 'Рыбка', amountInCart: 2, amountInStore: 3, price: 100, discount: 0, description: null, shortDescription: null, weight: null, kkal: null, proteins: null, fats: null, carbohydrates: null, shelfLife: null, conditionsLife: null, companyName: null, imageUrl: ''),
   ];
 
   @override
@@ -24,17 +24,15 @@ class CartRepositoryMock implements CartRepository{
   @override
   Future<void> addProduct(Product product) async {
     await Future.delayed(const Duration(seconds: 1));
-    if(random.nextInt(10) < 8){
+    if(true){
       for(var cartProduct in _cart){
         if(cartProduct.id == product.id){
-          debugPrint("amount increased");
-          cartProduct.quantity++;
+          cartProduct.amountInCart++;
           return;
         }
       }
-      debugPrint("new added");
       Product clone = Product.clone(product);
-      clone.quantity = 1;
+      clone.amountInCart = 1;
       _cart.add(clone);
     }
   }
@@ -44,8 +42,8 @@ class CartRepositoryMock implements CartRepository{
     await Future.delayed(const Duration(seconds: 1));
     for(var cartProduct in _cart){
       if(cartProduct.id == product.id){
-        cartProduct.quantity--;
-        if(cartProduct.quantity < 1){
+        cartProduct.amountInCart--;
+        if(cartProduct.amountInCart < 1){
           _cart.remove(cartProduct);
         }
         return;

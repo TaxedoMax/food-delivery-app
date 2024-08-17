@@ -3,7 +3,8 @@ import 'package:antons_app/dto/single_product_response.dart';
 class Product{
   final String id;
   final String name;
-  int quantity;
+  int amountInCart = 0;
+  final int amountInStore;
   final double price;
   final double? discount;
   final String? description;
@@ -18,11 +19,14 @@ class Product{
   final String? companyName;
   final String? imageUrl;
 
-  Product.named({required this.id, required this.name, required this.quantity, required this.price, required this.discount, required this.description, required this.shortDescription, required this.weight, required this.kkal, required this.proteins, required this.fats, required this.carbohydrates, required this.shelfLife, required this.conditionsLife, required this.companyName, required this.imageUrl});
-  Product(this.id, this.name, this.quantity, this.price, this.discount, this.description, this.shortDescription, this.weight, this.kkal, this.proteins, this.fats, this.carbohydrates, this.shelfLife, this.conditionsLife, this.companyName, this.imageUrl);
+  bool canBeAddedToCart() => amountInCart < amountInStore;
+
+  Product.named({required this.id, required this.name, required this.amountInCart, required this.amountInStore, required this.price, required this.discount, required this.description, required this.shortDescription, required this.weight, required this.kkal, required this.proteins, required this.fats, required this.carbohydrates, required this.shelfLife, required this.conditionsLife, required this.companyName, required this.imageUrl});
+  Product(this.id, this.name, this.amountInCart, this.amountInStore, this.price, this.discount, this.description, this.shortDescription, this.weight, this.kkal, this.proteins, this.fats, this.carbohydrates, this.shelfLife, this.conditionsLife, this.companyName, this.imageUrl);
   factory Product.fromSingleProductResponse(SingleProductResponse singleProductResponse) => Product(
       singleProductResponse.id,
       singleProductResponse.name,
+      0,
       singleProductResponse.quantity,
       singleProductResponse.price,
       singleProductResponse.discount,
@@ -38,9 +42,11 @@ class Product{
       singleProductResponse.companyName,
       singleProductResponse.imageUrl
   );
-  factory Product.clone(Product product) => Product(product.id,
+  factory Product.clone(Product product) => Product(
+      product.id,
       product.name,
-      product.quantity,
+      product.amountInCart,
+      product.amountInStore,
       product.price,
       product.discount,
       product.description,

@@ -41,36 +41,43 @@ class _CartItemState extends State<CartItem>{
                     Text(widget.product.name, style: MainTypography.defaultTextStyle),
                     Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
                     // Button +/-
-                    Container(
-                      width: 100,
-                      padding: const EdgeInsets.all(5),
-                      decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () => BlocProvider.of<CartBloc>(context).add(ProductRemovedEvent(widget.product)),
-                            child: const Icon(Icons.remove, color: MainColorScheme.mainText)
-                          ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () => BlocProvider.of<CartBloc>(context).add(ProductRemovedEvent(widget.product)),
+                                icon: const Icon(Icons.remove, color: MainColorScheme.mainText)
+                              ),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(widget.product.quantity.toString(), style: MainTypography.defaultTextStyle),
-                          ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                child: Text(widget.product.amountInCart.toString(), style: MainTypography.defaultTextStyle),
+                              ),
 
-                          InkWell(
-                              onTap: () => BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product)),
-                              child: const Icon(Icons.add, color: MainColorScheme.mainText)
+                              IconButton(
+                                  onPressed: widget.product.canBeAddedToCart()
+                                      ? () => BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product))
+                                      : null,
+                                  color: MainColorScheme.mainText,
+                                  disabledColor: MainColorScheme.hintText,
+                                  icon: const Icon(Icons.add)
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     )
                   ],
                 ),
               ),
             ),
             // TODO: check discount
-            Text('${widget.product.price * widget.product.quantity} руб', style: MainTypography.defaultTextStyle,)
+            Text('${widget.product.price * widget.product.amountInCart} руб', style: MainTypography.defaultTextStyle,)
           ],
         ),
       ),

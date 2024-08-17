@@ -49,12 +49,12 @@ class CartUseCase{
     _cartCache ??= [];
     for(var cartProduct in _cartCache!){
       if(cartProduct.id == product.id){
-        cartProduct.quantity++;
+        cartProduct.amountInCart++;
         return;
       }
     }
     var newProduct = Product.clone(product);
-    newProduct.quantity = 1;
+    newProduct.amountInCart = 1;
     _cartCache!.add(newProduct);
   }
 
@@ -62,8 +62,8 @@ class CartUseCase{
     _cartCache ??= [];
     for(var cartProduct in _cartCache!){
       if(cartProduct.id == product.id){
-        cartProduct.quantity--;
-        if(cartProduct.quantity < 1){
+        cartProduct.amountInCart--;
+        if(cartProduct.amountInCart < 1){
           _cartCache!.remove(cartProduct);
         }
         return;
@@ -95,15 +95,17 @@ class CartUseCase{
     _cartCache ??= [];
     bool flag = true;
     var cart = await _cartRepository.getCart();
-    if(_cartCache!.length != cart.length) flag = false;
-
-    for(int i = 0; i < cart.length; i++){
-      if(_cartCache![i].quantity != cart[i].quantity || _cartCache![i].id != cart[i].id) {
-        flag = false;
-        break;
+    if(_cartCache!.length != cart.length) {
+      flag = false;
+    }
+    else{
+      for(int i = 0; i < cart.length; i++){
+        if(_cartCache![i].amountInCart != cart[i].amountInCart || _cartCache![i].id != cart[i].id) {
+          flag = false;
+          break;
+        }
       }
     }
-
     // Actually we update cache only when all requests are sent
     if(canUpdateCartCache()){
       debugPrint('real 5');
