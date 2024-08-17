@@ -27,29 +27,28 @@ class _ProductMarketItemState extends State<ProductMarketItem>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image
-          Container(
-
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: Image.network(widget.product.imageUrl ?? '',
-              errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/no_image.png',),
+          Expanded(
+            child: Center(
+              child: Image.network(widget.product.imageUrl ?? '',
+                // width: 150,
+                // height: 150,
+                errorBuilder: (context, error, stackTrace) =>
+                    Image.asset('assets/images/no_image.png',
+                      // width: 150,
+                      // height: 150,
+                    ),
+              ),
             ),
           ),
-
-          Text(widget.product.name, style: MainTypography.defaultTextStyle),
+    
+          FittedBox(child: Text(widget.product.name, style: MainTypography.defaultTextStyle)),
           Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
-          BlocBuilder<AuthBloc, AuthBlocState>(
-            builder: (context, authState) {
-              return InkWell(
-                onTap: ()=> BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product)),
-                child: Container(
-                  decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
-                  alignment: Alignment.center,
-                  child: Text('${widget.product.price.toString()} руб', style: MainTypography.buttonTextStyle),
-                ),
-              );
-            }
+          Center(
+            child: ElevatedButton(
+              onPressed: ()=> BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product)),
+              style: MainDecorators.defaultButtonStyle(),
+              child: Text('${widget.product.price.toString()} руб', style: MainTypography.buttonTextStyle),
+            ),
           )
         ],
       )

@@ -118,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                                       .add(LoginRequestedEvent(_loginController.text, _passwordController.text));
                                 }
                               },
-                              child: const Text('Войти'),
+                              style: MainDecorators.defaultButtonStyle(),
+                              child: const Text('Войти', style: MainTypography.buttonTextStyle),
                             ),
                             const SizedBox(height: 16.0),
 
@@ -129,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                                   context.push('/register');
                                 }
                               },
-                              child: const Text('Регистрация'),
+                              child: const Text('Регистрация', style: MainTypography.hintTextStyle),
                             ),
 
                             const SizedBox(height: 16.0),

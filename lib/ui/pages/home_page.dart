@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>{
           ),
           actions: [
           Container(
-            width: 500,
+            width: 300,
             height: 50,
             decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.background),
             alignment: Alignment.topCenter,
@@ -195,15 +195,16 @@ class _HomePageState extends State<HomePage>{
                           Positioned.directional(
                             textDirection: TextDirection.rtl,
                             start: 0,
-                            width: 100,
+                            //width: 150,
                             bottom: 0,
-                            child: FloatingActionButton(
+                            child: ElevatedButton(
                               onPressed: () {
                                 setState(() {
                                   _cartIsOpened = true;
                                 });
                               },
-                              child: const Text('Корзина'),
+                              style: MainDecorators.defaultButtonStyle(),
+                              child: const Text('Корзина', style: MainTypography.buttonTextStyle),
                             ),
                           ),
                         ]

@@ -20,16 +20,16 @@ class _CartFragmentState extends State<CartFragment>{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
+      builder: (context, cartState) {
         return Column(
           children: [
             Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if(state is CartLoadingState)
+                    if(cartState is CartLoadingState)
                       const CircularProgressIndicator(),
-                    if(state is CartUploadedState && state.cart.isEmpty)
+                    if(cartState is CartUploadedState && cartState.cart.isEmpty)
                       Container(
                         height: 350,
                         width: 350,
@@ -40,35 +40,23 @@ class _CartFragmentState extends State<CartFragment>{
                           ),
                         ),
                       ),
-                    if(state is CartUploadedState && state.cart.isNotEmpty)
+                    if(cartState is CartUploadedState && cartState.cart.isNotEmpty)
                       Expanded(
                         child: ListView.separated(
                             shrinkWrap: true,
-                            itemBuilder: (context, index) => CartItem(product: state.cart[index]),
+                            itemBuilder: (context, index) => CartItem(product: cartState.cart[index]),
                             separatorBuilder: (context, index) => const Divider(),
-                            itemCount: state.cart.length),
+                            itemCount: cartState.cart.length),
                       ),
                   ],
                 )
             ),
-
-            BlocBuilder<AuthBloc, AuthBlocState>(
-              builder: (context, authState) {
-                return InkWell(
-                  onTap: (){
-                    BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
-                  },
-                  child: Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    decoration: MainDecorators.defaultBoxDecoration(MainColorScheme.main),
-                    child: const Text(
-                      'Заказать',
-                      style: MainTypography.buttonTextStyle,
-                    ),
-                  ),
-                );
-              }
+            ElevatedButton(
+              onPressed: (){
+                BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
+              },
+              style: MainDecorators.defaultButtonStyle(),
+              child: const Text('Заказать', style: MainTypography.buttonTextStyle),
             )
           ]
         );

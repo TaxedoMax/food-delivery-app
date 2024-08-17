@@ -65,7 +65,7 @@ class _MarketFragmentState extends State<MarketFragment>{
                     builder: (context, constraints) {
                       return GridView.builder(
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: constraints.maxWidth ~/ 200,
+                              crossAxisCount: constraints.maxWidth ~/ 150,
                               mainAxisSpacing: 20,
                               crossAxisSpacing: 20,
                               childAspectRatio: (170 / 245)

@@ -56,6 +56,7 @@ class CartRepositoryMock implements CartRepository{
   @override
   Future<bool> order() async{
     await Future.delayed(const Duration(seconds: 1));
+    _cart.clear();
     return true;
   }
 

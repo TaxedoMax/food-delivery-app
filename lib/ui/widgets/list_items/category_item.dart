@@ -29,14 +29,15 @@ class CategoryItem extends StatelessWidget{
             padding: const EdgeInsets.all(10),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: constraints.maxWidth ~/ 210,
+                  crossAxisCount: constraints.maxWidth ~/ 200,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
-                  childAspectRatio: 11 / 12
+                  childAspectRatio: 10 / 12
               ),
               shrinkWrap: true,
               itemCount: category.subCategories.length,
               scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index){
                 return InkWell(
                   onTap: () => BlocProvider.of<FragmentBloc>(context).add(CategoryClickedEvent(subCategory: category.subCategories[index])),

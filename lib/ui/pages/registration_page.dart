@@ -161,7 +161,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       .add(RegistrationRequestedEvent(_loginController.text, _emailController.text, _passwordController.text));
                                 }
                               },
-                              child: const Text('Зарегистрироваться'),
+                              style: MainDecorators.defaultButtonStyle(),
+                              child: const Text('Зарегистрироваться', style: MainTypography.buttonTextStyle),
                             ),
                             const SizedBox(height: 16.0),
 
@@ -170,7 +171,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               onPressed: (){
                                 context.push('/login');
                               },
-                              child: const Text('Войти'),
+                              child: const Text('Войти', style: MainTypography.hintTextStyle),
                             ),
                           ],
                         ),
