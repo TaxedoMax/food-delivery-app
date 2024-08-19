@@ -61,4 +61,12 @@ class Product{
       product.companyName,
       product.imageUrl
   );
+
+  static List<Product> cloneList(List<Product> products){
+    List<Product> cloneList = [];
+    for(var product in products){
+      cloneList.add(Product.clone(product));
+    }
+    return cloneList;
+  }
 }

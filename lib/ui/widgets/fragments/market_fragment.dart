@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../entities/category.dart';
 import '../../themes/main_theme/main_color_scheme.dart';
 import '../../themes/main_theme/typography.dart';
-import '../list_items/product_market_item.dart';
+import '../list_items/market_item.dart';
 
 class MarketFragment extends StatefulWidget{
   final Category category;
@@ -71,7 +71,7 @@ class _MarketFragmentState extends State<MarketFragment>{
                               childAspectRatio: (170 / 245)
                           ),
                           itemCount: state.products.length,
-                          itemBuilder: (BuildContext context, int index) => ProductMarketItem(product: state.products[index])
+                          itemBuilder: (BuildContext context, int index) => MarketItem(product: state.products[index])
                       );
                     }
                   );

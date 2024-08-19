@@ -1,6 +1,5 @@
 import 'package:antons_app/ui/themes/main_theme/main_color_scheme.dart';
 import 'package:antons_app/ui/themes/main_theme/typography.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainDecorators{
@@ -12,6 +11,7 @@ class MainDecorators{
   static ButtonStyle defaultButtonStyle() => ElevatedButton.styleFrom(
     backgroundColor: MainColorScheme.main,
     foregroundColor: MainColorScheme.mainLight,
+    disabledBackgroundColor: MainColorScheme.mainLight,
     elevation: 5,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(20))

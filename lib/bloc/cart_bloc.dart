@@ -11,14 +11,15 @@ import '../entities/product.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState>{
   AuthBlocState? authBlocState;
-  late StreamSubscription<AuthBlocState> streamSubscription;
+  late StreamSubscription<AuthBlocState> authStreamSubscription;
 
   final _cartUseCase = GetIt.instance<CartUseCase>();
 
   CartBloc(Stream<AuthBlocState> stream): super(CartLoadingState()){
     // Subscribe to auth state
-    streamSubscription = stream.listen(_onAuthStateChanged);
+    authStreamSubscription = stream.listen(_onAuthStateChanged);
 
+    on<CartInitEvent>(_onCartInitEvent);
     on<CartUpdateRequestedEvent>(_onCartUpdateRequestedEvent);
     on<ProductAddedEvent>(_onProductAddedEvent);
     on<ProductRemovedEvent>(_onProductRemovedEvent);
@@ -27,8 +28,21 @@ class CartBloc extends Bloc<CartEvent, CartState>{
 
   @override
   close() async {
-    streamSubscription.cancel();
+    authStreamSubscription.cancel();
     super.close();
+  }
+
+  _onCartInitEvent(CartInitEvent event, Emitter emit) async {
+    try{
+      emit(CartLoadingState());
+      var cart = await _cartUseCase.getCart();
+      debugPrint('Cart updated');
+      emit(CartUploadedState(cart));
+    }
+    on Exception{
+      // TODO: unfinished
+      emit(CartUploadedState([]));
+    }
   }
 
   _onAuthStateChanged(AuthBlocState authBlocState){
@@ -47,68 +61,53 @@ class CartBloc extends Bloc<CartEvent, CartState>{
     }
     on Exception catch(e){
       if(e is UnauthorizedException){
-        _cartUseCase.clearCache();
-        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+        emit(CartUploadedWithErrorState([], 401));
       }
     }
   }
 
   _onProductAddedEvent(ProductAddedEvent event, Emitter emit) async {
     try{
-      _cartUseCase.cartUpdateRequestStarted();
-      // Adding to cached cart
-      debugPrint("1");
-      _cartUseCase.addProductToCache(event.product);
-      // Building information
-      debugPrint("2");
-      emit(CartUploadedState(_cartUseCase.getCartFromCache()));
-      // Adding product to api cart
-      debugPrint("3");
+      var oldCart = Product.cloneList(_cartUseCase.getCartCache());
+      emit(CartWaitingState(oldCart));
+
       await _cartUseCase.addProduct(event.product);
+      var newCart = await _cartUseCase.getCart();
 
-      _cartUseCase.cartUpdateRequestFinished();
-
-      debugPrint("4");
-      // Checking if everything is ok, only when all requests finished
-      if(_cartUseCase.canUpdateCartCache()){
-        debugPrint("Started checking");
-        bool status = await _cartUseCase.updateCartCache();
-        debugPrint("Finished checking");
-        if(!status){
-          debugPrint("5");
-          emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 422));
-        }
+      final (changesDelta, changes) = _cartUseCase.cartsDifference(oldCart, newCart);
+      if(changes.length == 1 && changesDelta[0] == 1 && changes[0].id == event.product.id){
+        emit(CartUploadedState(newCart));
       }
-    } on Exception catch(e){
+      else{
+        emit(CartUploadedWithErrorState(newCart, 422));
+      }
+    }
+    on Exception catch(e){
       if(e is UnauthorizedException){
-        _cartUseCase.clearCache();
-        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartCache(), 401));
       }
     }
   }
 
   _onProductRemovedEvent(ProductRemovedEvent event, Emitter emit) async {
     try{
-      _cartUseCase.cartUpdateRequestStarted();
-      _cartUseCase.removeProductFromCache(event.product);
-      emit(CartUploadedState(_cartUseCase.getCartFromCache()));
-      await _cartUseCase.removeProduct(event.product);
-      _cartUseCase.cartUpdateRequestFinished();
+      var oldCart = Product.cloneList(_cartUseCase.getCartCache());
+      emit(CartWaitingState(oldCart));
 
-      if(_cartUseCase.canUpdateCartCache()){
-        debugPrint("Started checking");
-        bool status = await _cartUseCase.updateCartCache();
-        debugPrint("Finished checking");
-        if(!status){
-          debugPrint("5");
-          emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 422));
-        }
+      await _cartUseCase.removeProduct(event.product);
+      var newCart = await _cartUseCase.getCart();
+
+      final (changesDelta, changes) = _cartUseCase.cartsDifference(oldCart, newCart);
+      if(changes.length == 1 && changesDelta[0] == -1 && changes[0].id == event.product.id){
+        emit(CartUploadedState(newCart));
+      }
+      else{
+        emit(CartUploadedWithErrorState(newCart, 422));
       }
     }
     on Exception catch(e){
       if(e is UnauthorizedException){
-        _cartUseCase.clearCache();
-        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartCache(), 401));
       }
     }
   }
@@ -118,7 +117,6 @@ class CartBloc extends Bloc<CartEvent, CartState>{
       emit(CartLoadingState());
       bool status = await _cartUseCase.order();
       if(status){
-        _cartUseCase.clearCache();
         List<Product> cart = await _cartUseCase.getCart();
         emit(CartUploadedState(cart));
       }
@@ -129,8 +127,7 @@ class CartBloc extends Bloc<CartEvent, CartState>{
     }
     on Exception catch(e){
       if(e is UnauthorizedException){
-        _cartUseCase.clearCache();
-        emit(CartUploadedWithErrorState(_cartUseCase.getCartFromCache(), 401));
+        emit(CartUploadedWithErrorState(_cartUseCase.getCartCache(), 401));
       }
     }
   }
@@ -139,6 +136,7 @@ class CartBloc extends Bloc<CartEvent, CartState>{
 }
 
 abstract class CartEvent{}
+class CartInitEvent extends CartEvent{}
 class CartUpdateRequestedEvent extends CartEvent{}
 class ProductAddedEvent extends CartEvent{
   final Product product;
@@ -150,15 +148,17 @@ class ProductRemovedEvent extends CartEvent{
 }
 class CartOrderedEvent extends CartEvent{}
 
+
 abstract class CartState{}
 class CartLoadingState extends CartState{}
 class CartUploadedState extends CartState{
   final List<Product> cart;
   CartUploadedState(this.cart);
 }
+class CartWaitingState extends CartUploadedState{
+  CartWaitingState(super.cart);
+}
 class CartUploadedWithErrorState extends CartUploadedState{
   int errorStatus;
   CartUploadedWithErrorState(super.cart, this.errorStatus);
 }
-class CartEmptyState extends CartState{}
-class CartUnknownState extends CartState{}

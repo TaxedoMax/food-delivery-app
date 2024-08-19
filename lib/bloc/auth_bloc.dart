@@ -6,7 +6,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState>{
   final authUseCase = GetIt.instance<AuthUseCase>();
 
   AuthBloc() : super(UnauthorizedState()){
-    on<AppStartedEvent>(_onAppStartedEvent);
+    on<AuthInitEvent>(_onAuthInitEvent);
     on<LoginRequestedEvent>(_onLoginRequestedEvent);
     on<RegistrationRequestedEvent>(_onRegistrationRequestedEvent);
   }
@@ -33,7 +33,7 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState>{
     }
   }
 
-  _onAppStartedEvent(AppStartedEvent event, Emitter emit) async {
+  _onAuthInitEvent(AuthInitEvent event, Emitter emit) async {
     emit(UnauthorizedState());
     bool isAuthorized = await authUseCase.isAuthorized();
     if(isAuthorized){
@@ -54,7 +54,7 @@ class RegistrationRequestedEvent extends AuthBlocEvent{
   final String password;
   RegistrationRequestedEvent(this.login, this.email, this.password);
 }
-class AppStartedEvent extends AuthBlocEvent{}
+class AuthInitEvent extends AuthBlocEvent{}
 class AuthOutdatedEvent extends AuthBlocEvent{}
 
 abstract class AuthBlocState{}

@@ -52,9 +52,10 @@ class _CartFragmentState extends State<CartFragment>{
                 )
             ),
             ElevatedButton(
-              onPressed: (){
-                BlocProvider.of<CartBloc>(context).add(CartOrderedEvent());
-              },
+              // TODO: bad
+              onPressed: cartState is! CartWaitingState
+                  ? ()=> BlocProvider.of<CartBloc>(context).add(CartOrderedEvent())
+                  : null,
               style: MainDecorators.defaultButtonStyle(),
               child: const Text('Заказать', style: MainTypography.buttonTextStyle),
             )

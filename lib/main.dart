@@ -64,10 +64,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc()..add(AppStartedEvent())
+            create: (context) => AuthBloc()..add(AuthInitEvent())
           ),
           BlocProvider<CartBloc>(
-              create: (context) => CartBloc(BlocProvider.of<AuthBloc>(context).stream)..add(CartUpdateRequestedEvent())
+              create: (context) => CartBloc(BlocProvider.of<AuthBloc>(context).stream)..add(CartInitEvent())
           )
         ],
         child: MaterialApp.router(
