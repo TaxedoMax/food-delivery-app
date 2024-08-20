@@ -1,4 +1,4 @@
-# antons_app
+# Food delivery app
 
 Internet-shop of daily products (frontend)
 
