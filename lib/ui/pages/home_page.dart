@@ -24,9 +24,9 @@ class _HomePageState extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     return BlocListener<CartBloc, CartState>(
-      listener: (BuildContext context, state) {
-        if(state is CartUploadedWithErrorState){
-          if(state.errorStatus == 422){
+      listener: (BuildContext context, cartState) {
+        if(cartState is CartUploadedWithErrorState){
+          if(cartState.errorStatus == 422){
             showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage>{
                 )
             );
           }
-          else if(state.errorStatus == 401){
+          else if(cartState.errorStatus == 401){
             showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage>{
                 create: (context) => CategoryListBloc()..add(CategoryListUpdatedEvent())
                 ),
             BlocProvider<ProductListBloc>(
-              create: (context) => ProductListBloc(),
+              create: (context) => ProductListBloc(BlocProvider.of<CartBloc>(context).stream),
             ),
           ],
           child: Padding(

@@ -27,5 +27,3 @@ class CategoryClickedEvent extends FragmentEvent{
   CategoryClickedEvent({required this.subCategory});
 }
 class CategoryListOpenedEvent extends FragmentEvent{}
-
-// abstract class FragmentState{}

@@ -64,13 +64,15 @@ class _MarketItemState extends State<MarketItem>{
             FittedBox(child: Text(widget.product.name, style: MainTypography.defaultTextStyle)),
             Text('${widget.product.weight.toString()} г', style: MainTypography.hintTextStyle),
             Center(
-              child: ElevatedButton(
-                onPressed: _canChangeCart
-                    ? ()=> BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product))
-                    : null,
-                style: MainDecorators.defaultButtonStyle(),
-                child: Text('${widget.product.price.toString()} руб', style: MainTypography.buttonTextStyle),
-              ),
+              child: widget.product.amountInCart == 0
+                  ? ElevatedButton(
+                      onPressed: _canChangeCart
+                        ? ()=> BlocProvider.of<CartBloc>(context).add(ProductAddedEvent(widget.product))
+                        : null,
+                      style: MainDecorators.defaultButtonStyle(),
+                      child: Text('${widget.product.price.toString()} руб', style: MainTypography.buttonTextStyle),
+                    )
+                  : null
             )
           ],
         )

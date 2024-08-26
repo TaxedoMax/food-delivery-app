@@ -21,6 +21,15 @@ class Product{
 
   bool canBeAddedToCart() => amountInCart < amountInStore;
 
+  @override
+  bool operator == (other){
+    if(other is! Product) return false;
+    return id == other.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
   Product.named({required this.id, required this.name, required this.amountInCart, required this.amountInStore, required this.price, required this.discount, required this.description, required this.shortDescription, required this.weight, required this.kkal, required this.proteins, required this.fats, required this.carbohydrates, required this.shelfLife, required this.conditionsLife, required this.companyName, required this.imageUrl});
   Product(this.id, this.name, this.amountInCart, this.amountInStore, this.price, this.discount, this.description, this.shortDescription, this.weight, this.kkal, this.proteins, this.fats, this.carbohydrates, this.shelfLife, this.conditionsLife, this.companyName, this.imageUrl);
   factory Product.fromSingleProductResponse(SingleProductResponse singleProductResponse) => Product(

@@ -9,4 +9,6 @@ class Category{
     required this.name,
     required this.imageUrl,
     required this.subCategories});
+
+  factory Category.empty() => Category(id: '', name: '', imageUrl: '', subCategories: []);
 }
